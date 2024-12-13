@@ -10,7 +10,7 @@ public class JavaCodeGeneratorTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-        String drawioFilepath = "/Users/phamkien/eclipse-workspace/JavaCodeGenerator/src/AIMS (1).drawio";
+        String drawioFilepath = "C:/Users/HP/Downloads/AIMS.drawio";
         String decoded_xml = DecodeAndCompress.convert(drawioFilepath);
 		StyleParser parser_style = new StyleParser(decoded_xml);
 //		System.out.println(decoded_xml);

@@ -2,7 +2,12 @@ package GUI.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
+import Decode.DecodeAndCompress;
+import Generator.JavaCodeGenerator;
+import Parser.StyleParser;
+import Parser.SyntaxParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +37,17 @@ public class Scene2_Controller {
         Stage stage = (Stage) browse.getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
         System.out.println(selectedFile);
+        String drawioFilepath = selectedFile.getAbsolutePath();
+        System.out.println(drawioFilepath);
+        String decoded_xml = DecodeAndCompress.convert(drawioFilepath);
+		StyleParser parser_style = new StyleParser(decoded_xml);
+		Map<String, Object> style_tree = parser_style.convertToStyleTree();
 		
+		SyntaxParser parser_syntax = new SyntaxParser(style_tree);
+		Map<String, Map<String, Object>> syntax_tree = parser_syntax.convertToSyntaxTree();
+
+		JavaCodeGenerator java_gen = new JavaCodeGenerator(syntax_tree);
+		java_gen.generateCode();
 	}
 	public void gen_code(ActionEvent event) throws Exception{
 		Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene3.fxml"));

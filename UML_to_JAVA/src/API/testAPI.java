@@ -13,17 +13,17 @@ import java.nio.file.Paths;
 public class testAPI {
 	 public static void main(String[] args) {
 			String apiUrl = "http://127.0.0.1:8000";
-			// String descriptions = "{\"public class Vehicle\" :" +
-			// 						"{\"start\":\"The Vehicle initializes its engine and prepares all systems for operation.\"," +
-			// 						"\"stop\": \"The Vehicle powers down its engine and deactivates non-essential systems.\","+
-			// 						"\"accelerate\": \"The Vehicle increases its speed by applying more power to its drivetrain.\","+
-			// 						"\"brake\": \"The Vehicle slows down or comes to a stop by applying its braking mechanism.\"}," +
-			// 					"\"public class Car\" :"+
-			// 						"{\"playMusic\": \"The Car's entertainment system plays music for the passengers.\","+
-			// 						"\"enableCruiseControl\": \"The Car maintains a steady speed without driver input through its cruise control system.\"},"+
-			// 					"\"public class ElectricCar\" :"+
-			// 					" {\"chargeBattery\": \"The ElectricCar connects to a charging station to replenish its battery.\","+
-			// 					" \"regeneratePower\": \"The ElectricCar converts kinetic energy into electrical energy during braking to recharge the battery.\"}}";
+//			 String descriptions = "{\"public class Vehicle\" :" +
+//			 						"{\"start\":\"The Vehicle initializes its engine and prepares all systems for operation.\"," +
+//			 						"\"stop\": \"The Vehicle powers down its engine and deactivates non-essential systems.\","+
+//			 						"\"accelerate\": \"The Vehicle increases its speed by applying more power to its drivetrain.\","+
+//			 						"\"brake\": \"The Vehicle slows down or comes to a stop by applying its braking mechanism.\"}," +
+//			 					"\"public class Car\" :"+
+//			 						"{\"playMusic\": \"The Car's entertainment system plays music for the passengers.\","+
+//			 						"\"enableCruiseControl\": \"The Car maintains a steady speed without driver input through its cruise control system.\"},"+
+//			 					"\"public class ElectricCar\" :"+
+//			 					" {\"chargeBattery\": \"The ElectricCar connects to a charging station to replenish its battery.\","+
+//			 					" \"regeneratePower\": \"The ElectricCar converts kinetic energy into electrical energy during braking to recharge the battery.\"}}";
 			String descriptions = readFiletoJson("test.txt");
 			String classes =  "{" + //
 			"    \"public class Vehicle\": {" + //
