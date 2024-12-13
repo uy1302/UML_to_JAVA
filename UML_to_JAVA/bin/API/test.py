@@ -1,4 +1,4 @@
-from src.genAI.AIgenerator import AIagent
+from genAI.AIgenerator import AIagent
 import os 
 import requests
 import urllib.parse
