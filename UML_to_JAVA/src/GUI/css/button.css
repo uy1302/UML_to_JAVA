@@ -1,0 +1,74 @@
+.button,.menu-button {
+    -fx-font-family: "Open Sans", sans-serif;
+    -fx-font-size: 16px;
+    -fx-letter-spacing: 2px; /* JavaFX supports letter-spacing directly */
+    -fx-text-transform: uppercase;
+    -fx-text-fill: #F5F5DC; /* Changed from black to beige */
+    -fx-background-color: transparent;
+    -fx-cursor: hand; /* Use 'hand' instead of 'pointer' */
+    -fx-border-color: #F5F5DC; /* Changed from black to beige */
+    -fx-border-width: 3;
+    -fx-padding: 0.25em 0.5em; /* Padding might need adjustment based on the scene's scaling */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0); /* Simulate the layered box-shadow */
+    -fx-background-insets: 0; /* Ensures the border doesn't affect background */
+}
+
+.button:pressed,.menu-button:pressed {
+    -fx-effect: none; /* Removes the shadow when pressed */
+    -fx-translate-y: 5px; /* Moves the button down */
+    -fx-translate-x: 5px; /* Moves the button right */
+}
+
+.menu-button .label {
+    -fx-text-fill: #F5F5DC;
+}
+
+/* General styling for MenuItem */
+.menu-item {
+    -fx-font-family: "Open Sans", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #F5F5DC; /* Beige text color for the item */
+    -fx-background-color: #28374F; /* New background color */
+    -fx-padding: 5px 10px; /* Adjust padding */
+}
+
+/* General styling for RadioMenuItem */
+.radio-menu-item {
+    -fx-font-family: "Open Sans", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #F5F5DC; /* Beige text color for the item */
+    -fx-background-color: #28374F; /* New background color */
+    -fx-padding: 5px 10px; /* Adjust padding */
+}
+
+/* Hover effect for MenuItem and RadioMenuItem */
+.menu-item:hover, .radio-menu-item:hover {
+    -fx-background-color: #3a4b68; /* Slightly lighter shade for hover */
+}
+
+/* Selected state for RadioMenuItem */
+.radio-menu-item:selected {
+    -fx-background-color: #1f2b3d; /* Darker shade for selected item */
+    -fx-text-fill: #F5F5DC; /* Keep text beige for consistency */
+}
+
+/* Styling the radio button indicator */
+.radio-menu-item .radio {
+    -fx-mark-color: #F5F5DC; /* Beige color for the selected radio button mark */
+}
+
+.text-area {
+    -fx-background-color: #28374F; /* Change to your desired background color */
+    -fx-text-fill: #000000; /* Text color for better contrast */
+    -fx-border-color: #F5F5DC; /* Optional: Border color to match the theme */
+    -fx-border-width: 2px; /* Optional: Border thickness */
+    -fx-padding: 5px; /* Adjust inner padding */
+    -fx-font-family: "Open Sans", sans-serif; /* Optional: Font style */
+    -fx-font-size: 14px; /* Font size */
+}
+
+/* Optional: Add a focus effect */
+.text-area:focused {
+    -fx-border-color: #FFD700; /* Highlight the border on focus */
+    -fx-background-color: #374B5E; /* Slightly lighter background when focused */
+}
