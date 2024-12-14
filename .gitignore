@@ -1,2 +1,4 @@
 /.metadata/
 /UML_to_JAVA/__pycache__/
+**/.metadata/*
+**/metadata/*
