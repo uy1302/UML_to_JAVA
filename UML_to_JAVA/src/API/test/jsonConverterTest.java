@@ -15,7 +15,7 @@ public class jsonConverterTest {
         int endIndex = jsonString.lastIndexOf("]");
         String allDataContent = jsonString.substring(startIndex + 1, endIndex);
 
-        // Step 3: Process entries manually (preserve code brackets)
+        // Step 3: Process entries manually (preserve code brackets and inner quotes)
         String[] entries = allDataContent.split("\\},\\{");
         Map<String, String> dataMap = new HashMap<>();
 
@@ -30,12 +30,12 @@ public class jsonConverterTest {
             int colonIndex = entry.indexOf("\":\"");
             if (colonIndex != -1) {
                 String key = entry.substring(0, colonIndex).replace("\"", "").trim();
-                String value = entry.substring(colonIndex + 3).replace("\"", "").trim();
+                String value = entry.substring(colonIndex + 3, entry.length() - 1).trim(); // Remove ending quote
 
-                // Replace escaped characters in the value
+                // Replace only escaped JSON characters (but keep quotes inside Java code intact)
                 value = value.replace("\\n", "\n")
                              .replace("\\t", "\t")
-                             .replace("\\\"", "\"");
+                             .replace("\\\"", "\""); // Replace \" with " only for JSON escaping
 
                 dataMap.put(key, value);
             }

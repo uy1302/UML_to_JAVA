@@ -46,7 +46,7 @@ public class Scene3_Controller {
 	public void initialize() {
 		for (Map.Entry<String, String> entry : javaCode.entrySet()) {
             MenuItem menuItem = new MenuItem(entry.getKey());
-            menuItem.setOnAction(e -> codeField.setText(entry.getValue().replace("\\t", "\t")));
+            menuItem.setOnAction(e -> codeField.setText(entry.getValue()));
             fileSelector.getItems().add(menuItem);
         }
 	}

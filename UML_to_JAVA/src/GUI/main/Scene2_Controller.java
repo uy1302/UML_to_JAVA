@@ -43,6 +43,9 @@ public class Scene2_Controller {
 	@FXML
     private TextArea descriptionText;
 	
+	@FXML
+    private Button descriptionBrowse;
+	
 	private Stage stage;
 	private Scene scene;
 	private String classes = "{" + //
@@ -85,6 +88,7 @@ public class Scene2_Controller {
 	
 	private String apiUrl = "http://127.0.0.1:8000";
 	
+	@FXML
 	public void browse_file(ActionEvent event) throws Exception{
 		FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open a file");
@@ -105,6 +109,30 @@ public class Scene2_Controller {
 		java_gen.generateCode();
 	}
 	
+	@FXML
+    public void readDescriptionFile(ActionEvent event) {
+		FileChooser fileChooser = new FileChooser();
+
+        // Set an initial directory (e.g., Desktop)
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home") + "/Desktop"));
+
+        // Set a file extension filter to show only .txt files
+        FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(txtFilter);
+
+        // Open the file chooser dialog
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        // Check if the user selected a file
+        if (selectedFile != null) {
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            descriptionText.setText(jsonConverter.readFileAsString(selectedFile.getAbsolutePath()));
+        } else {
+            System.out.println("File selection canceled.");
+        }
+    }
+	
+	@FXML
 	public void gen_code(ActionEvent event) throws Exception{
 		String descriptionString = descriptionText.getText();
 //		System.out.println(descriptionString);
@@ -124,17 +152,6 @@ public class Scene2_Controller {
 			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        stage.close();
 		}else {
-//			Stage errorStage = new Stage(); 
-//	        errorStage.setTitle("Error");
-//
-//	        Label errorMessage = new Label("Error: Wrong description format!");
-//	        errorMessage.setStyle("-fx-font-size: 14px; -fx-text-fill: red; -fx-padding: 20px;");
-//
-//	        StackPane root = new StackPane(errorMessage);
-//	        Scene scene = new Scene(root, 300, 150); 
-//	        errorStage.setScene(scene);
-//
-//	        errorStage.show();
 	        
 	        Alert alert = new Alert(Alert.AlertType.ERROR);
 	        alert.setTitle("Error");
@@ -147,6 +164,7 @@ public class Scene2_Controller {
 		
 	}
 	
+	@FXML
 	public void exit(ActionEvent event) throws IOException{
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Exit");
@@ -160,6 +178,7 @@ public class Scene2_Controller {
 		}
 	}
 	
+	@FXML
 	public void logout(ActionEvent event) throws Exception{
 		Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene1.fxml"));
 		
