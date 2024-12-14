@@ -4,7 +4,7 @@ public class ElectricCar {
 	private String chargingPortType;
 
 	void chargeBattery(double hours){
-		currentCharge += hours * 50; //Assuming a charge rate.  
+		currentCharge += hours * 10; // Assuming a charging rate of 10 units per hour.
 		if(currentCharge > batteryCapacity) currentCharge = batteryCapacity;
 	}
 	void regeneratePower(double energy){

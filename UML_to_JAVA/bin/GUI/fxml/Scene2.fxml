@@ -23,7 +23,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <Button alignment="CENTER" layoutX="303.0" layoutY="479.0" mnemonicParsing="false" onAction="#gen_code" prefHeight="75.0" prefWidth="206.0" text="Generate code" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="303.0" AnchorPane.rightAnchor="291.0" AnchorPane.topAnchor="479.0">
+      <Button fx:id="btnGenCode" alignment="CENTER" layoutX="303.0" layoutY="479.0" mnemonicParsing="false" onAction="#gen_code" prefHeight="75.0" prefWidth="206.0" text="Generate code" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="303.0" AnchorPane.rightAnchor="291.0" AnchorPane.topAnchor="479.0">
          <font>
             <Font size="24.0" />
          </font>
@@ -37,7 +37,7 @@
             <Font size="15.0" />
          </font>
       </MenuButton>
-      <TextArea layoutX="105.0" layoutY="133.0" prefHeight="312.0" prefWidth="574.0" style="-fx-background-color: beige;" text="//Fill methods" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="140.0" />
+      <TextArea fx:id="descriptionText" layoutX="105.0" layoutY="133.0" prefHeight="312.0" prefWidth="574.0" style="-fx-background-color: beige;" text="//Fill methods" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="140.0" />
       <Button fx:id="signout_button" layoutX="34.0" layoutY="562.0" mnemonicParsing="false" onAction="#logout" prefHeight="44.0" prefWidth="78.0" text="Log out" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
          <font>
             <Font size="15.0" />
