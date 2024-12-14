@@ -1,2 +1,11 @@
-/GUI/
+/.DS_Store
 /API/
+/Decode/
+/GUI/
+/Generator/
+/Parser/
+/Test/
+/exceptions/
+/genAI/
+/module-info.class
+/example/
