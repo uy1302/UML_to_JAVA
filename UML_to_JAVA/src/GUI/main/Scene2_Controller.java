@@ -48,43 +48,7 @@ public class Scene2_Controller {
 	
 	private Stage stage;
 	private Scene scene;
-	private String classes = "{" + //
-			"    \"public class Vehicle\": {" + //
-			"        \"attributes\": {" + //
-			"            \"make\": \"private String make\"," + //
-			"            \"model\": \"private String model\"," + //
-			"            \"year\": \"private int year\"," + //
-			"            \"speed\": \"private double speed\"" + //
-			"        }," + //
-			"        \"methods\": {" + //
-			"            \"start\": \"void start()\"," + //
-			"            \"stop\": \"void stop()\"," + //
-			"            \"accelerate\": \"void accelerate(double increment)\"," + //
-			"            \"brake\": \"void brake(double decrement)\"" + //
-			"        }" + //
-			"    }," + //
-			"    \"public class Car\": {" + //
-			"        \"attributes\": {" + //
-			"            \"entertainmentSystem\": \"private String entertainmentSystem\"," + //
-			"            \"seatingCapacity\": \"private int seatingCapacity\"" + //
-			"        }," + //
-			"        \"methods\": {" + //
-			"            \"playMusic\": \"void playMusic(String songName)\"," + //
-			"            \"enableCruiseControl\": \"void enableCruiseControl(double speed)\"" + //
-			"        }" + //
-			"    }," + //
-			"    \"public class ElectricCar\": {" + //
-			"        \"attributes\": {" + //
-			"            \"batteryCapacity\": \"private double batteryCapacity\"," + //
-			"            \"currentCharge\": \"private double currentCharge\"," + //
-			"            \"chargingPortType\": \"private String chargingPortType\"" + //
-			"        }," + //
-			"        \"methods\": {" + //
-			"            \"chargeBattery\": \"void chargeBattery(double hours)\"," + //
-			"            \"regeneratePower\": \"void regeneratePower(double energy)\"" + //
-			"        }" + //
-			"    }" + //
-			"}";
+	private String classes;
 	
 	private String apiUrl = "http://127.0.0.1:8000";
 	
@@ -94,10 +58,12 @@ public class Scene2_Controller {
         fileChooser.setTitle("Open a file");
 //        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")+ "/Desktop"));
         Stage stage = (Stage) browse.getScene().getWindow();
+        FileChooser.ExtensionFilter drawioFilter = new FileChooser.ExtensionFilter("DrawIO Files (*.drawio)", "*.drawio");
+        fileChooser.getExtensionFilters().add(drawioFilter);
         File selectedFile = fileChooser.showOpenDialog(stage);
-        System.out.println(selectedFile);
+//        System.out.println(selectedFile);
         String drawioFilepath = selectedFile.getAbsolutePath();
-        System.out.println(drawioFilepath);
+//        System.out.println(drawioFilepath);
         String decoded_xml = DecodeAndCompress.convert(drawioFilepath);
 		StyleParser parser_style = new StyleParser(decoded_xml);
 		Map<String, Object> style_tree = parser_style.convertToStyleTree();
@@ -107,6 +73,12 @@ public class Scene2_Controller {
 
 		JavaCodeGenerator java_gen = new JavaCodeGenerator(syntax_tree);
 		java_gen.generateCode();
+		
+		String descriptions = java_gen.generateDescription();
+		classes = java_gen.generateClassStructure();
+//		System.out.println(classes);
+//		System.out.println(descriptions);
+		descriptionText.setText(descriptions);
 	}
 	
 	@FXML
@@ -119,7 +91,7 @@ public class Scene2_Controller {
         // Set a file extension filter to show only .txt files
         FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(txtFilter);
-
+        Stage stage = (Stage) browse.getScene().getWindow();
         // Open the file chooser dialog
         File selectedFile = fileChooser.showOpenDialog(stage);
 
@@ -142,7 +114,7 @@ public class Scene2_Controller {
 		if (postResponseCode == HttpURLConnection.HTTP_OK) {
 			connectAPI.runPython("test.py");
 			Map<String, String> javaCode = connectAPI.getCode();
-			connectAPI.clearCode();
+//			connectAPI.clearCode();
 //			Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene3.fxml"));
 //			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 //			scene = new Scene(root);

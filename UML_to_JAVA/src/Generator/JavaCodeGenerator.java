@@ -76,7 +76,7 @@ public class JavaCodeGenerator {
                 file += "\n";
                 file += generateProperties((Map<String, Map<String, String>>) _class.get("properties"));
                 file += "\n";
-                System.out.println(file);
+//                System.out.println(file);
                 file += generateMethods(
                     (Map<String, Map<String, String>>) _class.get("methods"), 
                     (Map<String, Map<String, String>>) _class.get("properties"), 
@@ -88,7 +88,7 @@ public class JavaCodeGenerator {
                 
                 List<String> check_lst = Arrays.asList((String) _class.get("name"), file);
                 this.files.add(check_lst);
-                System.out.println(file);
+//                System.out.println(file);
             }
 
 //            generateFiles();
@@ -160,29 +160,29 @@ public class JavaCodeGenerator {
 
             // Generate getters and setters for private properties
             if ("class".equals(classType) || "abstract".equals(classType)) {
-                for (Map<String, String> propertyValue : properties.values()) {
-                    if ("private".equals(propertyValue.get("access"))) {
-                        String propertyName = propertyValue.get("name");
-                        String propertyType = propertyValue.get("type");
-                        String capitalizedName = propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
-
-                        // Getter
-                        String getter = String.format(
-                            "\tpublic %s get%s() {\n\t\treturn this.%s;\n\t}\n", 
-                            propertyType, capitalizedName, propertyName
-                        );
-                        methodsString.append(getter).append("\n");
-                        privateMethodsList.add(getter);
-
-                        // Setter
-                        String setter = String.format(
-                            "\tpublic void set%s(%s %s) {\n\t\tthis.%s = %s;\n\t}\n", 
-                            capitalizedName, propertyType, propertyName, propertyName, propertyName
-                        );
-                        methodsString.append(setter).append("\n");
-                        privateMethodsList.add(setter);
-                    }
-                }
+//                for (Map<String, String> propertyValue : properties.values()) {
+//                    if ("private".equals(propertyValue.get("access"))) {
+//                        String propertyName = propertyValue.get("name");
+//                        String propertyType = propertyValue.get("type");
+//                        String capitalizedName = propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+//
+//                        // Getter
+//                        String getter = String.format(
+//                            "\tpublic %s get%s() {\n\t\treturn this.%s;\n\t}\n", 
+//                            propertyType, capitalizedName, propertyName
+//                        );
+//                        methodsString.append(getter).append("\n");
+//                        privateMethodsList.add(getter);
+//
+//                        // Setter
+//                        String setter = String.format(
+//                            "\tpublic void set%s(%s %s) {\n\t\tthis.%s = %s;\n\t}\n", 
+//                            capitalizedName, propertyType, propertyName, propertyName, propertyName
+//                        );
+//                        methodsString.append(setter).append("\n");
+//                        privateMethodsList.add(setter);
+//                    }
+//                }
 
                 // Generate interface method stubs
                 for (Map<String, String> interfaceMethod : interfaceMethods) {
@@ -283,14 +283,13 @@ public class JavaCodeGenerator {
         builder.setLength(builder.length() - 2); 
         builder.append("\n}");
 
-        System.out.println(builder.toString());
-        return builder.toString();
+//        System.out.println(builder.toString());
+        return "{"+builder.toString();
     }
 
     
     public String generateDescription(Map<String, Map<String, Object>> syntaxTree) {
         StringBuilder formattedDescription = new StringBuilder();
-
         for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
             Map<String, Object> _class = entry.getValue();
             String className = (String) _class.get("name");

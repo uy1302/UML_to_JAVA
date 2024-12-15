@@ -5,17 +5,21 @@ public class Vehicle {
 	private double speed;
 
 	void start(){
-		System.out.println("Engine started.");
+		System.out.println("Vehicle started.");
+		speed = 0;
 	}
 	void stop(){
+		System.out.println("Vehicle stopped.");
 		speed = 0;
-		System.out.println("Engine stopped.");
 	}
 	void accelerate(double increment){
 		speed += increment;
+		System.out.println("Accelerated by " + increment + ". Current speed: " + speed);
 	}
 	void brake(double decrement){
 		speed -= decrement;
-		if(speed < 0) speed = 0;
+		if (speed < 0) speed = 0; // Speed cannot be negative
+		System.out.println("Braked by " + decrement + ". Current speed: " + speed);
 	}
 }
+

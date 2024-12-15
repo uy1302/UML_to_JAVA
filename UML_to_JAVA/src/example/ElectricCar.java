@@ -4,12 +4,12 @@ public class ElectricCar {
 	private String chargingPortType;
 
 	void chargeBattery(double hours){
-		currentCharge += hours * 10; //Assuming a charging rate of 10 units per hour.
-		if(currentCharge > batteryCapacity) currentCharge = batteryCapacity;
+		currentCharge += hours * 50; // Assuming 50 units charge per hour.  Adjust as needed.
+		System.out.println("Battery charged for " + hours + " hours. Current charge: " + currentCharge);
+
 	}
-	void regeneratePower(double energy){
-		currentCharge += energy;
-		if(currentCharge > batteryCapacity) currentCharge = batteryCapacity;
+	void regeneratePower(double battery){
+		currentCharge += battery;
+		System.out.println("Regenerated " + battery + " units of power. Current charge: " + currentCharge);
 	}
 }
-
