@@ -219,49 +219,48 @@ public class JavaCodeGenerator {
         }
     }
     
-    //6
-//    public void generateFiles(List<List<String>> files) {
-//        System.out.println("<<< WRITING FILES TO " + filePath + " >>>");
-//
-//        try {
-//            for (List<String> file : files) {
-//                String fileName = file.get(0) + ".java";
-//                String fileContents = file.get(1);
-//                
-//                File outputFile = new File(filePath + File.separator + fileName);
-//                
-//                try (FileWriter writer = new FileWriter(outputFile)) {
-//                    writer.write(fileContents);
-//                }
-//            }
-//        } catch (Exception e) {
-//            System.err.println("JavaCodeGenerator.generateFiles ERROR: " + e.getMessage());
-//        }
-//    }
     
-    public String generateClassStructure() {
-    	StringBuilder builder = new StringBuilder();
-    	
-    	for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
+    public String generateClassStructure(Map<String, Map<String, Object>> syntaxTree) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
             Map<String, Object> _class = entry.getValue();
             String className = (String) _class.get("name");
             String classType = (String) _class.get("type");
 
-            // Add class name
-            builder.append("    \"public ").append(classType).append(" ").append(className).append("\": {\n");
+            Map<String, List<String>> relationships = (Map<String, List<String>>) _class.get("relationships");
+            List<String> extendsList = relationships.get("extends");
+            List<String> implementsList = relationships.get("implements");
+
+            StringBuilder inheritanceBuilder = new StringBuilder();
+            if (extendsList != null && !extendsList.isEmpty()) {
+                String parentClassId = extendsList.get(0); 
+                String parentClassName = (String) syntaxTree.get(parentClassId).get("name");
+                inheritanceBuilder.append(" extends ").append(parentClassName);
+            }
+            if (implementsList != null && !implementsList.isEmpty()) {
+                List<String> interfaceNames = implementsList.stream()
+                        .map(id -> (String) syntaxTree.get(id).get("name"))
+                        .collect(Collectors.toList());
+                inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
+            }
+
+            builder.append("    \"public ").append(classType).append(" ").append(className)
+                    .append(inheritanceBuilder).append("\": {\n");
 
             // Add attributes
-            Map<String, Map<String, String>> attributes = (Map<String, Map<String, String>>) _class.get("properties");
+            Map<String, Map<String, String>> properties = (Map<String, Map<String, String>>) _class.get("properties");
             builder.append("        \"attributes\": {\n");
-            for (Map.Entry<String, Map<String, String>> attrEntry : attributes.entrySet()) {
-                Map<String, String> attrDetails = attrEntry.getValue();
-                String access = attrDetails.get("access");
-                String type = attrDetails.get("type");
-                String name = attrDetails.get("name");
-                builder.append("            \"").append(name).append("\": \"").append(access).append(" ").append(type).append(" ").append(name).append("\",\n");
+            for (Map.Entry<String, Map<String, String>> propEntry : properties.entrySet()) {
+                Map<String, String> propDetails = propEntry.getValue();
+                String access = propDetails.get("access");
+                String type = propDetails.get("type");
+                String name = propDetails.get("name");
+                builder.append("            \"").append(name).append("\": \"").append(access).append(" ").append(type)
+                        .append(" ").append(name).append("\",\n");
             }
-            if (!attributes.isEmpty()) {
-                builder.setLength(builder.length() - 2); 
+            if (!properties.isEmpty()) {
+                builder.setLength(builder.length() - 2);
             }
             builder.append("\n        },\n");
 
@@ -270,9 +269,11 @@ public class JavaCodeGenerator {
             builder.append("        \"methods\": {\n");
             for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
                 Map<String, String> methodDetails = methodEntry.getValue();
+                String access = methodDetails.get("access");
                 String returnType = methodDetails.get("return_type");
                 String methodName = methodDetails.get("name");
-                builder.append("            \"").append(methodName).append("\": \"").append(returnType).append(" ").append(methodName).append("\",\n");
+                builder.append("            \"").append(methodName).append("\": \"").append(access).append(" ")
+                        .append(returnType).append(" ").append(methodName).append("\",\n");
             }
             if (!methods.isEmpty()) {
                 builder.setLength(builder.length() - 2); 
@@ -285,27 +286,54 @@ public class JavaCodeGenerator {
         System.out.println(builder.toString());
         return builder.toString();
     }
+
     
-    public String generateDescription() {
+    public String generateDescription(Map<String, Map<String, Object>> syntaxTree) {
         StringBuilder formattedDescription = new StringBuilder();
-        for (List<String> file : files) {
-        	
-            String className = file.get(0);
-            String fileContents = file.get(1);
-            formattedDescription.append("public class ").append(className).append(":\n");
 
-            List<String> methodLines = Arrays.stream(fileContents.split("\n"))
-                .filter(line -> line.matches("\\s*public\\s+.*\\s+.*\\(.*\\).*\\{"))
-                .collect(Collectors.toList());
+        for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
+            Map<String, Object> _class = entry.getValue();
+            String className = (String) _class.get("name");
+            String classType = (String) _class.get("type");
 
-            for (String methodLine : methodLines) {
-                String methodName = methodLine.trim().split("\\s+")[2].split("\\(")[0]; 
-                formattedDescription.append("    ").append(methodName).append(":\n");
+            Map<String, List<String>> relationships = (Map<String, List<String>>) _class.get("relationships");
+            List<String> extendsList = relationships.get("extends");
+            List<String> implementsList = relationships.get("implements");
+
+            StringBuilder inheritanceBuilder = new StringBuilder();
+            if (extendsList != null && !extendsList.isEmpty()) {
+                String parentClassId = extendsList.get(0); 
+                String parentClassName = (String) syntaxTree.get(parentClassId).get("name");
+                inheritanceBuilder.append(" extends ").append(parentClassName);
+            }
+            if (implementsList != null && !implementsList.isEmpty()) {
+                List<String> interfaceNames = implementsList.stream()
+                        .map(id -> (String) syntaxTree.get(id).get("name"))
+                        .collect(Collectors.toList());
+                inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
+            }
+
+            // Add class 
+            formattedDescription.append("public class ").append(className)
+                    .append(inheritanceBuilder).append(":\n");
+
+            // Add methods
+            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");
+            for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
+                Map<String, String> methodDetails = methodEntry.getValue();
+                String methodName = methodDetails.get("name");
+                String methodNameBeforeParen = methodName.split("\\(")[0].trim();
+                formattedDescription.append("    ").append(methodNameBeforeParen).append(":\n");
             }
         }
+
+        // Output the final formatted description
         System.out.println(formattedDescription.toString());
         return formattedDescription.toString();
     }
+
+
+
 
     public void generateFiles() {
     	System.out.println("<<< WRITING FILES TO " + filePath + " >>>");
