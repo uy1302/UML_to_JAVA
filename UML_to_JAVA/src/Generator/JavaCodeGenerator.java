@@ -76,7 +76,7 @@ public class JavaCodeGenerator {
                 file += "\n";
                 file += generateProperties((Map<String, Map<String, String>>) _class.get("properties"));
                 file += "\n";
-                System.out.println(file);
+//                System.out.println(file);
                 file += generateMethods(
                     (Map<String, Map<String, String>>) _class.get("methods"), 
                     (Map<String, Map<String, String>>) _class.get("properties"), 
@@ -88,7 +88,7 @@ public class JavaCodeGenerator {
                 
                 List<String> check_lst = Arrays.asList((String) _class.get("name"), file);
                 this.files.add(check_lst);
-                System.out.println(file);
+//                System.out.println(file);
             }
 
 //            generateFiles();
@@ -160,29 +160,29 @@ public class JavaCodeGenerator {
 
             // Generate getters and setters for private properties
             if ("class".equals(classType) || "abstract".equals(classType)) {
-                for (Map<String, String> propertyValue : properties.values()) {
-                    if ("private".equals(propertyValue.get("access"))) {
-                        String propertyName = propertyValue.get("name");
-                        String propertyType = propertyValue.get("type");
-                        String capitalizedName = propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
-
-                        // Getter
-                        String getter = String.format(
-                            "\tpublic %s get%s() {\n\t\treturn this.%s;\n\t}\n", 
-                            propertyType, capitalizedName, propertyName
-                        );
-                        methodsString.append(getter).append("\n");
-                        privateMethodsList.add(getter);
-
-                        // Setter
-                        String setter = String.format(
-                            "\tpublic void set%s(%s %s) {\n\t\tthis.%s = %s;\n\t}\n", 
-                            capitalizedName, propertyType, propertyName, propertyName, propertyName
-                        );
-                        methodsString.append(setter).append("\n");
-                        privateMethodsList.add(setter);
-                    }
-                }
+//                for (Map<String, String> propertyValue : properties.values()) {
+//                    if ("private".equals(propertyValue.get("access"))) {
+//                        String propertyName = propertyValue.get("name");
+//                        String propertyType = propertyValue.get("type");
+//                        String capitalizedName = propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+//
+//                        // Getter
+//                        String getter = String.format(
+//                            "\tpublic %s get%s() {\n\t\treturn this.%s;\n\t}\n", 
+//                            propertyType, capitalizedName, propertyName
+//                        );
+//                        methodsString.append(getter).append("\n");
+//                        privateMethodsList.add(getter);
+//
+//                        // Setter
+//                        String setter = String.format(
+//                            "\tpublic void set%s(%s %s) {\n\t\tthis.%s = %s;\n\t}\n", 
+//                            capitalizedName, propertyType, propertyName, propertyName, propertyName
+//                        );
+//                        methodsString.append(setter).append("\n");
+//                        privateMethodsList.add(setter);
+//                    }
+//                }
 
                 // Generate interface method stubs
                 for (Map<String, String> interfaceMethod : interfaceMethods) {
@@ -272,7 +272,7 @@ public class JavaCodeGenerator {
                 Map<String, String> methodDetails = methodEntry.getValue();
                 String returnType = methodDetails.get("return_type");
                 String methodName = methodDetails.get("name");
-                builder.append("            \"").append(methodName).append("\": \"").append(returnType).append(" ").append(methodName).append("\",\n");
+                builder.append("            \"").append(methodName.substring(0, methodName.indexOf("("))).append("\": \"").append(returnType).append(" ").append(methodName).append("\",\n");
             }
             if (!methods.isEmpty()) {
                 builder.setLength(builder.length() - 2); 
@@ -282,8 +282,8 @@ public class JavaCodeGenerator {
         builder.setLength(builder.length() - 2); 
         builder.append("\n}");
 
-        System.out.println(builder.toString());
-        return builder.toString();
+//        System.out.println(builder.toString());
+        return "{"+builder.toString();
     }
     
     public String generateDescription() {
@@ -292,18 +292,25 @@ public class JavaCodeGenerator {
         	
             String className = file.get(0);
             String fileContents = file.get(1);
-            formattedDescription.append("public class ").append(className).append(":\n");
+            System.out.println(className);
+            System.out.println(fileContents);
+            formattedDescription.append("public class ").append(className).append("\n");
 
+//            List<String> methodLines = Arrays.stream(fileContents.split("\n"))
+//                .filter(line -> line.matches("\\s*public\\s+.*\\s+.*\\(.*\\).*\\{"))
+//                .collect(Collectors.toList());
+            
             List<String> methodLines = Arrays.stream(fileContents.split("\n"))
-                .filter(line -> line.matches("\\s*public\\s+.*\\s+.*\\(.*\\).*\\{"))
-                .collect(Collectors.toList());
+                    .filter(line -> line.matches(".*\\(.*\\).*"))
+                    .collect(Collectors.toList());
 
             for (String methodLine : methodLines) {
-                String methodName = methodLine.trim().split("\\s+")[2].split("\\(")[0]; 
-                formattedDescription.append("    ").append(methodName).append(":\n");
+                String methodName = methodLine.trim().split("\\s+")[2].split("\\(")[0];
+                System.out.println(methodName);
+                formattedDescription.append("").append(methodName).append(":\n");
             }
         }
-        System.out.println(formattedDescription.toString());
+//        System.out.println(formattedDescription.toString());
         return formattedDescription.toString();
     }
 
