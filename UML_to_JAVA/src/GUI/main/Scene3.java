@@ -21,7 +21,7 @@ public class Scene3 extends JFrame{
 		
 		this.setTitle("Scene3");
 		this.setVisible(true);
-		this.setSize(1050, 800);
+		this.setSize(800, 700);
 		
 		this.setLocationRelativeTo(null);
 		

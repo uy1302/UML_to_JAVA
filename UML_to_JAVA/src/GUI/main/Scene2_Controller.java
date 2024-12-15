@@ -106,15 +106,16 @@ public class Scene2_Controller {
 	
 	@FXML
 	public void gen_code(ActionEvent event) throws Exception{
-		String descriptionString = descriptionText.getText();
+		String descriptionString = descriptionText.getText().trim();
 //		System.out.println(descriptionString);
 		String descriptions = jsonConverter.StringtoJson(descriptionString);
-//		System.out.println(descriptions);
+		System.out.println(descriptions);
+		System.out.println(classes);
 		int postResponseCode = connectAPI.postAPI(descriptions, classes);
 		if (postResponseCode == HttpURLConnection.HTTP_OK) {
 			connectAPI.runPython("test.py");
 			Map<String, String> javaCode = connectAPI.getCode();
-//			connectAPI.clearCode();
+			connectAPI.clearCode();
 //			Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene3.fxml"));
 //			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 //			scene = new Scene(root);
