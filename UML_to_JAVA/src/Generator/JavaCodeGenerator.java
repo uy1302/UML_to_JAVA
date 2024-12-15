@@ -239,10 +239,74 @@ public class JavaCodeGenerator {
 //        }
 //    }
     
+    public String generateClassStructure() {
+    	StringBuilder builder = new StringBuilder();
+    	
+    	for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
+            Map<String, Object> _class = entry.getValue();
+            String className = (String) _class.get("name");
+            String classType = (String) _class.get("type");
+
+            // Add class name
+            builder.append("    \"public ").append(classType).append(" ").append(className).append("\": {\n");
+
+            // Add attributes
+            Map<String, Map<String, String>> attributes = (Map<String, Map<String, String>>) _class.get("properties");
+            builder.append("        \"attributes\": {\n");
+            for (Map.Entry<String, Map<String, String>> attrEntry : attributes.entrySet()) {
+                Map<String, String> attrDetails = attrEntry.getValue();
+                String access = attrDetails.get("access");
+                String type = attrDetails.get("type");
+                String name = attrDetails.get("name");
+                builder.append("            \"").append(name).append("\": \"").append(access).append(" ").append(type).append(" ").append(name).append("\",\n");
+            }
+            if (!attributes.isEmpty()) {
+                builder.setLength(builder.length() - 2); 
+            }
+            builder.append("\n        },\n");
+
+            // Add methods
+            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");
+            builder.append("        \"methods\": {\n");
+            for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
+                Map<String, String> methodDetails = methodEntry.getValue();
+                String returnType = methodDetails.get("return_type");
+                String methodName = methodDetails.get("name");
+                builder.append("            \"").append(methodName).append("\": \"").append(returnType).append(" ").append(methodName).append("\",\n");
+            }
+            if (!methods.isEmpty()) {
+                builder.setLength(builder.length() - 2); 
+            }
+            builder.append("\n        }\n    },\n");
+        }
+        builder.setLength(builder.length() - 2); 
+        builder.append("\n}");
+
+        System.out.println(builder.toString());
+        return builder.toString();
+    }
     
-    
-    
-    
+    public String generateDescription() {
+        StringBuilder formattedDescription = new StringBuilder();
+        for (List<String> file : files) {
+        	
+            String className = file.get(0);
+            String fileContents = file.get(1);
+            formattedDescription.append("public class ").append(className).append(":\n");
+
+            List<String> methodLines = Arrays.stream(fileContents.split("\n"))
+                .filter(line -> line.matches("\\s*public\\s+.*\\s+.*\\(.*\\).*\\{"))
+                .collect(Collectors.toList());
+
+            for (String methodLine : methodLines) {
+                String methodName = methodLine.trim().split("\\s+")[2].split("\\(")[0]; 
+                formattedDescription.append("    ").append(methodName).append(":\n");
+            }
+        }
+        System.out.println(formattedDescription.toString());
+        return formattedDescription.toString();
+    }
+
     public void generateFiles() {
     	System.out.println("<<< WRITING FILES TO " + filePath + " >>>");
     	
