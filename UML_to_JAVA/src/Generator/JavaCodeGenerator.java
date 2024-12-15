@@ -52,7 +52,7 @@ public class JavaCodeGenerator {
                         inheritanceBuilder.append(this.syntaxTree.get(r).get("name"));
                         first = false;
                     }
-                    inheritance = inheritanceBuilder.toString().strip();
+                    inheritance = inheritanceBuilder.toString().trim();
                 }
                 
                 String implementation = "";
@@ -67,7 +67,7 @@ public class JavaCodeGenerator {
                         implementationBuilder.append(this.syntaxTree.get(r).get("name"));
                         first = false;
                     }
-                    implementation = implementationBuilder.toString().strip();
+                    implementation = implementationBuilder.toString().trim();
                 }
 
                 List<Map<String, String>> interfaceMethods = new ArrayList<>();
@@ -220,7 +220,7 @@ public class JavaCodeGenerator {
     }
     
     
-    public String generateClassStructure(Map<String, Map<String, Object>> syntaxTree) {
+    public String generateClassStructure() {
         StringBuilder builder = new StringBuilder();
 
         for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
@@ -272,7 +272,7 @@ public class JavaCodeGenerator {
                 String access = methodDetails.get("access");
                 String returnType = methodDetails.get("return_type");
                 String methodName = methodDetails.get("name");
-                builder.append("            \"").append(methodName).append("\": \"").append(access).append(" ")
+                builder.append("            \"").append(methodName.substring(0, methodName.indexOf('('))).append("\": \"").append(access).append(" ")
                         .append(returnType).append(" ").append(methodName).append("\",\n");
             }
             if (!methods.isEmpty()) {
@@ -283,12 +283,12 @@ public class JavaCodeGenerator {
         builder.setLength(builder.length() - 2); 
         builder.append("\n}");
 
-//        System.out.println(builder.toString());
+        System.out.println(builder.toString());
         return "{"+builder.toString();
     }
 
     
-    public String generateDescription(Map<String, Map<String, Object>> syntaxTree) {
+    public String generateDescription() {
         StringBuilder formattedDescription = new StringBuilder();
         for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
             Map<String, Object> _class = entry.getValue();
@@ -314,7 +314,7 @@ public class JavaCodeGenerator {
 
             // Add class 
             formattedDescription.append("public class ").append(className)
-                    .append(inheritanceBuilder).append(":\n");
+                    .append(inheritanceBuilder).append("\n");
 
             // Add methods
             Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");

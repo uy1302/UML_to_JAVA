@@ -14,89 +14,48 @@ import java.io.*;
 public class testAPI {
 	 public static void main(String[] args) {
 			String apiUrl = "http://127.0.0.1:8000";
-//			 String descriptions = "{\"public class Vehicle\" :" +
-//			 						"{\"start\":\"The Vehicle initializes its engine and prepares all systems for operation.\"," +
-//			 						"\"stop\": \"The Vehicle powers down its engine and deactivates non-essential systems.\","+
-//			 						"\"accelerate\": \"The Vehicle increases its speed by applying more power to its drivetrain.\","+
-//			 						"\"brake\": \"The Vehicle slows down or comes to a stop by applying its braking mechanism.\"}," +
-//			 					"\"public class Car\" :"+
-//			 						"{\"playMusic\": \"The Car's entertainment system plays music for the passengers.\","+
-//			 						"\"enableCruiseControl\": \"The Car maintains a steady speed without driver input through its cruise control system.\"},"+
-//			 					"\"public class ElectricCar\" :"+
-//			 					" {\"chargeBattery\": \"The ElectricCar connects to a charging station to replenish its battery.\","+
-//			 					" \"regeneratePower\": \"The ElectricCar converts kinetic energy into electrical energy during braking to recharge the battery.\"}}";
-			String descriptions = jsonConverter.readFiletoJson("test.txt");
-//			descriptions = "";
-//			String classes =  "{" + //
-//			"    \"public class Vehicle\": {" + //
-//			"        \"attributes\": {" + //
-//			"            \"make\": \"private String make\"," + //
-//			"            \"model\": \"private String model\"," + //
-//			"            \"year\": \"private int year\"," + //
-//			"            \"speed\": \"private double speed\"" + //
-//			"        }," + //
-//			"        \"methods\": {" + //
-//			"            \"start\": \"void start()\"," + //
-//			"            \"stop\": \"void stop()\"," + //
-//			"            \"accelerate\": \"void accelerate(double increment)\"," + //
-//			"            \"brake\": \"void brake(double decrement)\"" + //
-//			"        }" + //
-//			"    }," + //
-//			"    \"public class Car\": {" + //
-//			"        \"attributes\": {" + //
-//			"            \"entertainmentSystem\": \"private String entertainmentSystem\"," + //
-//			"            \"seatingCapacity\": \"private int seatingCapacity\"" + //
-//			"        }," + //
-//			"        \"methods\": {" + //
-//			"            \"playMusic\": \"void playMusic(String songName)\"," + //
-//			"            \"enableCruiseControl\": \"void enableCruiseControl(double speed)\"" + //
-//			"        }" + //
-//			"    }," + //
-//			"    \"public class ElectricCar\": {" + //
-//			"        \"attributes\": {" + //
-//			"            \"batteryCapacity\": \"private double batteryCapacity\"," + //
-//			"            \"currentCharge\": \"private double currentCharge\"," + //
-//			"            \"chargingPortType\": \"private String chargingPortType\"" + //
-//			"        }," + //
-//			"        \"methods\": {" + //
-//			"            \"chargeBattery\": \"void chargeBattery(double hours)\"," + //
-//			"            \"regeneratePower\": \"void regeneratePower(double energy)\"" + //
-//			"        }" + //
-//			"    }" + //
-//			"}";
-			String classes = "{    \"public class Car\": {\r\n"
+			 String descriptions = "{\"public class Employer extends Person\": {\r\n"
+			 		+ "    \"hireEmployee\": \"hire a new employee, and make them work\",\r\n"
+			 		+ "    \"getEmployerDetails\": \"show all information\",\r\n"
+			 		+ "    \"Employer\": \"constructor\"},\r\n"
+			 		+ "\"public class Employee extends Person\": {\r\n"
+			 		+ "    \"work\": \"do a specific task\",\r\n"
+			 		+ "    \"getEmployeeDetails\": \"show all information\"},\r\n"
+			 		+ "\"public class Person\": {\r\n"
+			 		+ "    \"getDetails\": \"show all information\"\r\n"
+			 		+ "  }\r\n"
+			 		+ "}";
+//			String descriptions = jsonConverter.readFiletoJson("test.txt");
+			String classes = "{    \"public class Employer extends Person\": {\r\n"
 					+ "        \"attributes\": {\r\n"
-					+ "            \"entertainmentSystem\": \"private String entertainmentSystem\",\r\n"
-					+ "            \"seatingCapacity\": \"private int seatingCapacity\"\r\n"
+					+ "            \"company\": \"public String company\",\r\n"
+					+ "            \"position\": \"public String position\"\r\n"
 					+ "        },\r\n"
 					+ "        \"methods\": {\r\n"
-					+ "            \"playMusic\": \"void playMusic(String songname)\",\r\n"
-					+ "            \"enableCruiseControl\": \"void enableCruiseControl(double speed)\"\r\n"
+					+ "            \"hireEmployee\": \"public void hireEmployee(Employee employee)\",\r\n"
+					+ "            \"getEmployerDetails\": \"public String getEmployerDetails()\",\r\n"
+					+ "            \"Employer\": \"public void Employer(String company, String position)\"\r\n"
 					+ "        }\r\n"
 					+ "    },\r\n"
-					+ "    \"public class ElectricCar\": {\r\n"
+					+ "    \"public class Employee extends Person\": {\r\n"
 					+ "        \"attributes\": {\r\n"
-					+ "            \"batteryCapacity\": \"private double batteryCapacity\",\r\n"
-					+ "            \"currentCharge\": \"private double currentCharge\",\r\n"
-					+ "            \"chargingPortType\": \"private String chargingPortType\"\r\n"
+					+ "            \"employeeId\": \"public int employeeId\",\r\n"
+					+ "            \"salary\": \"public float salary\",\r\n"
+					+ "            \"department\": \"public String department\"\r\n"
 					+ "        },\r\n"
 					+ "        \"methods\": {\r\n"
-					+ "            \"chargeBattery\": \"void chargeBattery(double hours)\",\r\n"
-					+ "            \"regeneratePower\": \"void regeneratePower(double battery)\"\r\n"
+					+ "            \"work\": \"public void work()\",\r\n"
+					+ "            \"getEmployeeDetails\": \"public String getEmployeeDetails()\"\r\n"
 					+ "        }\r\n"
 					+ "    },\r\n"
-					+ "    \"public class Vehicle\": {\r\n"
+					+ "    \"public class Person\": {\r\n"
 					+ "        \"attributes\": {\r\n"
-					+ "            \"make\": \"private String make\",\r\n"
-					+ "            \"model\": \"private String model\",\r\n"
-					+ "            \"year\": \"private int year\",\r\n"
-					+ "            \"double\": \"private speed double\"\r\n"
+					+ "            \"name\": \"public String name\",\r\n"
+					+ "            \"id\": \"public int id\",\r\n"
+					+ "            \"address\": \"public String address\"\r\n"
 					+ "        },\r\n"
 					+ "        \"methods\": {\r\n"
-					+ "            \"start\": \"void start()\",\r\n"
-					+ "            \"stop\": \"void stop()\",\r\n"
-					+ "            \"accelerate\": \"void accelerate(double increment)\",\r\n"
-					+ "            \"brake\": \"void brake(double decrement)\"\r\n"
+					+ "            \"getDetails\": \"public String getDetails()\"\r\n"
 					+ "        }\r\n"
 					+ "    }\r\n"
 					+ "}";
