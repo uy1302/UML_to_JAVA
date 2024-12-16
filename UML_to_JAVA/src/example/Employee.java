@@ -4,16 +4,9 @@ public class Employee extends Person {
 	public String department;
 
 	public void work() {
-		System.out.println(name + " is working in " + department + " department.");
-	}
-
+        System.out.println(name + " is working on a task.");
+    }
 	public String getEmployeeDetails() {
-		return "Name: " + name + "\
-ID: " + id + "\
-Address: " + address + "\
-Employee ID: " + employeeId + "\
-Salary: " + salary + "\
-Department: " + department;
-	}
+        return "Name: " + name + ", ID: " + id + ", Address: " + address + ", Employee ID: " + employeeId + ", Salary: " + salary + ", Department: " + department;
+    }
 }
-

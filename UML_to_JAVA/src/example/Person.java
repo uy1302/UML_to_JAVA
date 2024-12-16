@@ -4,9 +4,7 @@ public class Person {
 	public String address;
 
 	public String getDetails() {
-		return "Name: " + name + "\
-ID: " + id + "\
-Address: " + address;
-	}
+        return "Name: " + name + ", ID: " + id + ", Address: " + address;
+    }
 }
 

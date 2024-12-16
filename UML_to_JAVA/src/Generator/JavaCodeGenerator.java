@@ -17,6 +17,7 @@ public class JavaCodeGenerator {
     private List<Object> properties;
     private List<Object> methods;
     private List<List<String>> files;
+    private Map<String, String> MapOutput;
     
     public JavaCodeGenerator (Map<String, Map<String, Object>> syntaxTree) {
     	this.syntaxTree = syntaxTree;
@@ -24,6 +25,7 @@ public class JavaCodeGenerator {
     	this.properties = new ArrayList<>();
     	this.methods = new ArrayList<>();
     	this.files = new ArrayList<>();
+    	this.MapOutput = new HashMap<>();
     }
 
     //1
@@ -72,6 +74,7 @@ public class JavaCodeGenerator {
 
                 List<Map<String, String>> interfaceMethods = new ArrayList<>();
                 getInterfaceMethods(implementsRelationships, interfaceMethods);
+                System.out.println((String) _class.get("name"));
                 file += generateClasses((String) _class.get("type"), (String) _class.get("name"), inheritance, implementation);
                 file += "\n";
                 file += generateProperties((Map<String, Map<String, String>>) _class.get("properties"));
@@ -85,7 +88,7 @@ public class JavaCodeGenerator {
                 );
                 
                 file += "}\n";
-                
+                MapOutput.put((String) _class.get("name"), file);
                 List<String> check_lst = Arrays.asList((String) _class.get("name"), file);
                 this.files.add(check_lst);
 //                System.out.println(file);
@@ -96,6 +99,8 @@ public class JavaCodeGenerator {
         catch (Exception e) {
             System.err.println("JavaCodeGenerator.generateCode ERROR: " + e.getMessage());
         }
+        System.out.println("#####");
+        System.out.println(MapOutput);
     }
     
     
@@ -126,6 +131,8 @@ public class JavaCodeGenerator {
         classes.add(classHeader);
         return classHeader;
     }
+    
+    
     
     //4
     public String generateMethods(
@@ -201,7 +208,9 @@ public class JavaCodeGenerator {
 
             return methodsString.toString();
         }
-    
+    public Map<String, String> getMapOutput () {
+    	return MapOutput;
+    }
     
     //5
     public void getInterfaceMethods(List<String> implementsList, List<Map<String, String>> interfaceMethods) {
