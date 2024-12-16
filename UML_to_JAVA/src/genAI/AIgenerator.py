@@ -6,7 +6,7 @@ class AIagent():
 
 	def __init__(self, api_key):
 		genai.configure(api_key=api_key)
-		self.model = genai.GenerativeModel("gemini-1.5-flash")
+		self.model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 	def generateCodeByDescriptions(self, descriptions, classes):
 		prompt = """You are a senior software developer. Complete the following methods of classes based on the discriptions, 

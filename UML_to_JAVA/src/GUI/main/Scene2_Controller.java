@@ -22,6 +22,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
@@ -45,6 +47,9 @@ public class Scene2_Controller {
 	
 	@FXML
     private Button descriptionBrowse;
+	
+	@FXML
+    private MenuButton btnSelectFile;
 	
 	private Stage stage;
 	private Scene scene;
@@ -78,7 +83,13 @@ public class Scene2_Controller {
 		classes = java_gen.generateClassStructure();
 //		System.out.println(classes);
 //		System.out.println(descriptions);
-		descriptionText.setText(descriptions);
+//		descriptionText.setText(descriptions);
+		Map<String, String >pureCode = java_gen.getMapOutput();
+		for (Map.Entry<String, String> entry : pureCode.entrySet()) {
+            MenuItem menuItem = new MenuItem(entry.getKey()+".java");
+            menuItem.setOnAction(e -> descriptionText.setText(entry.getValue()));
+            btnSelectFile.getItems().add(menuItem);
+        }
 	}
 	
 	@FXML
