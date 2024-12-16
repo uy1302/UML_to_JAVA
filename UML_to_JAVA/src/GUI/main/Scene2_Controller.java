@@ -43,7 +43,7 @@ public class Scene2_Controller {
     private Button btnGenCode;
 	
 	@FXML
-    private TextArea descriptionText;
+    private TextArea codeText;
 	
 	@FXML
     private Button descriptionBrowse;
@@ -87,7 +87,7 @@ public class Scene2_Controller {
 		Map<String, String >pureCode = java_gen.getMapOutput();
 		for (Map.Entry<String, String> entry : pureCode.entrySet()) {
             MenuItem menuItem = new MenuItem(entry.getKey()+".java");
-            menuItem.setOnAction(e -> descriptionText.setText(entry.getValue()));
+            menuItem.setOnAction(e -> codeText.setText(entry.getValue()));
             btnSelectFile.getItems().add(menuItem);
         }
 	}
@@ -109,7 +109,7 @@ public class Scene2_Controller {
         // Check if the user selected a file
         if (selectedFile != null) {
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-            descriptionText.setText(jsonConverter.readFileAsString(selectedFile.getAbsolutePath()));
+//            descriptionText.setText(jsonConverter.readFileAsString(selectedFile.getAbsolutePath()));
         } else {
             System.out.println("File selection canceled.");
         }
@@ -117,7 +117,16 @@ public class Scene2_Controller {
 	
 	@FXML
 	public void gen_code(ActionEvent event) throws Exception{
-		String descriptionString = descriptionText.getText().trim();
+//		String descriptionString = descriptionText.getText().trim();
+		String descriptionString = "public class Employer extends Person\r\n"
+				+ "    hireEmployee: hire a new employee, and make them work\r\n"
+				+ "    getEmployerDetails: show all information\r\n"
+				+ "    Employer: constructor\r\n"
+				+ "public class Employee extends Person\r\n"
+				+ "    work: do a specific task\r\n"
+				+ "    getEmployeeDetails: show all information\r\n"
+				+ "public class Person\r\n"
+				+ "    getDetails: show all information";
 //		System.out.println(descriptionString);
 		String descriptions = jsonConverter.StringtoJson(descriptionString);
 		System.out.println(descriptions);
@@ -132,9 +141,21 @@ public class Scene2_Controller {
 //			scene = new Scene(root);
 //			stage.setScene(scene);
 //			stage.show();
-			new Scene3(javaCode);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        stage.close();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/fxml/Scene3.fxml"));
+	        Parent root = loader.load();
+
+	        // Get the Scene3 controller and pass the javaCode
+	        Scene3_Controller scene3Controller = loader.getController();
+	        scene3Controller.setJavaCode(javaCode);
+
+	        // Switch scenes
+	        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	        scene = new Scene(root);
+	        stage.setScene(scene);
+	        stage.show();
+//			new Scene3(javaCode);
+//			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//	        stage.close();
 		}else {
 	        
 	        Alert alert = new Alert(Alert.AlertType.ERROR);

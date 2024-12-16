@@ -43,15 +43,6 @@ public class Scene3_Controller {
 	private Map<String, String> javaCode = new HashMap<>();
 	
 	@FXML
-	public void initialize() {
-		for (Map.Entry<String, String> entry : javaCode.entrySet()) {
-            MenuItem menuItem = new MenuItem(entry.getKey());
-            menuItem.setOnAction(e -> codeField.setText(entry.getValue()));
-            fileSelector.getItems().add(menuItem);
-        }
-	}
-	
-	@FXML
     public void exportFiles(ActionEvent event) {
 		 DirectoryChooser directoryChooser = new DirectoryChooser();
          directoryChooser.setTitle("Select Directory");
@@ -81,9 +72,9 @@ public class Scene3_Controller {
          }
     }
 	
-	public Scene3_Controller(Map<String, String> javaCode) {
-		this.javaCode = javaCode;
-	}
+//	public Scene3_Controller(Map<String, String> javaCode) {
+//		this.javaCode = javaCode;
+//	}
 	
 	public void new_file(ActionEvent event) throws Exception{
 		Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene2.fxml"));
@@ -121,5 +112,13 @@ public class Scene3_Controller {
 			stage.show();
 		}
 		
+	}
+	
+	public void setJavaCode(Map<String, String> javaCode) {
+		for (Map.Entry<String, String> entry : javaCode.entrySet()) {
+            MenuItem menuItem = new MenuItem(entry.getKey());
+            menuItem.setOnAction(e -> codeField.setText(entry.getValue()));
+            fileSelector.getItems().add(menuItem);
+        }
 	}
 }

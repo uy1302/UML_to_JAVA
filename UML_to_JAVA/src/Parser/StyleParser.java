@@ -564,14 +564,16 @@ public class StyleParser {
         for (char v : values.toCharArray()) {
             if (v == '+' || v == '-' || v == '#') {
                 if (tempVal.length() > 0) {
-                    vals.add(tempVal.toString().strip().replace(" ", ""));
+//                    vals.add(tempVal.toString().strip().replace(" ", ""));
+                	vals.add(tempVal.toString().trim().replace(" ", ""));
                     tempVal = new StringBuilder();
                 }
             }
             tempVal.append(v);
         }
 
-        vals.add(tempVal.toString().strip().replace(" ", ""));
+//        vals.add(tempVal.toString().strip().replace(" ", ""));
+        vals.add(tempVal.toString().trim().replace(" ", ""));
         return vals;
     }
 
