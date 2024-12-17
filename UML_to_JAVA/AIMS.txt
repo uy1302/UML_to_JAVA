@@ -1,0 +1,46 @@
+public class Book extends Media
+   Book(String title): constructor
+   Book(String title, String category, float cost, List<String>authors): constructor
+   getAuthors():get all authors' names
+   Book(String title, String category, float cost): constructor
+   addAuthor(String authorName):add an author
+   removeAuthor(String authorName):remove an author
+   toString(): get all information
+public class Track implements Playable
+   Track(String title, int length): constructor
+   getTitle():get title
+   equals(Track track):compare two tracks
+   play():print out title and length
+interface Playable
+   play():interface
+public class Disc extends Media
+   Disc(String title): constructor
+   Disc(String title, String category, float cost): constructor
+   Disc(String title, String category, String director, float cost): constructor
+   getLength():get length
+   getDirector():get director
+public class DigitalVideoDisc extends Disc implements Playable
+   DigitalVideoDisc(String title): constructor
+   DigitalVideoDisc(String title, String category, float cost): constructor
+   DigitalVideoDisc(String title, String category, String director, float cost):constructor
+   DigitalVideoDisc(String title, String category, String director, int length, float cost):constructor
+   toString():get all information
+   play():get length and title
+abstract class Media
+   Media(String title):constructor
+   Media(String title, String category, float cost):constructor
+   getId():get Id
+   getTitle():get title
+   getCategory():get category
+   getCost():get cost
+   equals(Media other):compare two Media
+public class CompactDisc extends Disc implements Playable
+   getArtist():get artist
+   CompactDisc(String title, String Category, String director, int length, float cost, String artist, List<Track>tracks):constructor
+   CompactDisc(String title, String Category, String director, int length, float cost):constructor
+   CompactDisc(String title):constructor
+   getTracks():get all tracks
+   play():print out title and length
+   toString():get all information
+   removeTrack(Track track):remove a track having the same title
+   addTrack(Track track):add a track if there is no track with the same title

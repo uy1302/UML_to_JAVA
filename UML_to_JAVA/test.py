@@ -12,8 +12,18 @@ response = requests.get(
     )
 descriptions = response.json()['all_data'][0]["descriptions"]
 classes = response.json()['all_data'][0]["classes"]
-print(descriptions)
-print(classes)
+# print(descriptions)
+# print(classes)
+for class_ in classes:
+    # print(classes[class_])
+    # print(class_)
+    if "toString()" in classes[class_]["methods"]:
+        print(class_)
+    if "toString()" in descriptions[class_] and "toString()" in classes[class_]["methods"]:
+        print(class_)
+
+print(descriptions["public class Book extends Media"])
+
 res = agent.generateCodeByDescriptions(descriptions, classes)
 # print(res)
 for file in res:

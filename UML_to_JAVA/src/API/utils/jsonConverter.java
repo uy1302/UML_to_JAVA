@@ -27,7 +27,7 @@ public class jsonConverter {
 		for (String line : lines) {
 			line = line.trim();
 
-			if (line.startsWith("public class")) {
+			if (line.startsWith("public class") || line.startsWith("abstract class") || line.startsWith("interface")) {
 				if (currentClass != null) {
 					jsonBuilder.append("},");
 				}

@@ -1,11 +1,8 @@
-/.DS_Store
-/API/
-/Decode/
 /GUI/
 /Generator/
+/API/
+/Decode/
 /Parser/
 /Test/
 /example/
 /exceptions/
-/genAI/
-/module-info.class

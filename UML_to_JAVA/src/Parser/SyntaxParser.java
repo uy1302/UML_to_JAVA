@@ -159,8 +159,7 @@ public class SyntaxParser {
                 List<String> values = safeCastToList(cell.get("values"));
                 if (values == null || values.isEmpty()) continue;
 
-//                String className = values.get(0).strip();
-                String className = values.get(0).trim();
+                String className = values.get(0).strip();
                 if (!classSLst.contains(className)) {
                     classSLst.add(className);
                 }
@@ -196,17 +195,15 @@ public class SyntaxParser {
             if (val.isEmpty()) continue;
 
             _id++;
-//            val = val.strip();
-            val = val.trim();
+            val = val.strip();
             char accessModifierSymbol = val.charAt(0);
             String[] tempVal = val.substring(1).split(":");
 
             Map<String, Object> propertyDetails = new HashMap<>();
             propertyDetails.put("access", getAccessModifier(accessModifierSymbol));
-//            propertyDetails.put("name", tempVal[0].strip());
-//            propertyDetails.put("type", tempVal[1].strip());
-            propertyDetails.put("name", tempVal[0].trim());
-            propertyDetails.put("type", tempVal[1].trim());
+            propertyDetails.put("name", tempVal[0].strip());
+            propertyDetails.put("type", tempVal[1].strip());
+
             template.put(_id, propertyDetails);
         }
 
@@ -223,8 +220,7 @@ public class SyntaxParser {
             if (val.isEmpty()) continue;
 
             _id++;
-//            val = val.strip();
-            val = val.trim();
+            val = val.strip();
             char accessModifierSymbol = val.charAt(0);
             String[] tempVal = val.substring(1).split(":");
 
@@ -236,8 +232,7 @@ public class SyntaxParser {
 
                 for (int i = 0; i < paramList.size(); i++) {
                     for (String x : classSLst) {
-//                        if (paramList.get(i).strip().startsWith(x)) {
-                    	if (paramList.get(i).trim().startsWith(x)) {
+                        if (paramList.get(i).strip().startsWith(x)) {
                             paramList.set(i, paramList.get(i).replace(x, x + " "));
                         }
                     }
@@ -249,9 +244,8 @@ public class SyntaxParser {
 
             Map<String, Object> methodDetails = new HashMap<>();
             methodDetails.put("access", getAccessModifier(accessModifierSymbol));
-//            methodDetails.put("name", tempVal[0].strip());
-            methodDetails.put("name", tempVal[0].trim());
-            methodDetails.put("return_type", tempVal.length > 1 ? tempVal[1].strip() : "void");
+            methodDetails.put("name", tempVal[0].strip());
+            methodDetails.put("return_type", tempVal.length > 1 ? tempVal[1].strip() : "");
 
             template.put(_id, methodDetails);
         }

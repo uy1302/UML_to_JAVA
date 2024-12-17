@@ -88,7 +88,7 @@ public class Scene2_Controller {
 //		descriptionText.setText(descriptions);
 		Map<String, String >pureCode = java_gen.getMapOutput();
 		for (Map.Entry<String, String> entry : pureCode.entrySet()) {
-            MenuItem menuItem = new MenuItem(entry.getKey()+".java");
+            MenuItem menuItem = new MenuItem(entry.getKey().replace("\n", "")+".java");
             menuItem.setOnAction(e -> codeText.setText(entry.getValue()));
             btnSelectFile.getItems().add(menuItem);
         }

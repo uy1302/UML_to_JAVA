@@ -111,10 +111,25 @@ public class JavaCodeGenerator {
         for (Map.Entry<String, Map<String, String>> entry : properties.entrySet()) {
             Map<String, String> propertyValue = entry.getValue();
             String access = propertyValue.get("access");
-            String type = propertyValue.get("type");
+            String type_test = propertyValue.get("type");
             String name = propertyValue.get("name");
-
-            String propertyString = "\t" + access + " " + type + " " + name + ";\n";
+            
+            boolean found_eq = false;
+            String type = "";
+            String postfix = "";
+            for (int i = 0; i < type_test.length(); i++) {
+            	char ch = type_test.charAt(i);
+            	if (ch == '=') {
+            		found_eq = true;
+            	}
+            	
+            	if (found_eq == false) {
+            		type += ch;
+            	} else {
+            		postfix += ch;
+            	}
+            }
+            String propertyString = "\t" + access + " " + type + " " + name + " " + postfix + ";\n";
             this.properties.add(propertyString);
             propertiesString += propertyString;
         }
@@ -126,7 +141,7 @@ public class JavaCodeGenerator {
     private String generateClasses(String classType, String className, String extendsStr, String implementsStr) {
         String typeOfClass = classType.equals("class") ? "public class" : classType;
         typeOfClass = classType.equals("abstract") ? "abstract class" : typeOfClass;
-        String classHeader = typeOfClass + " " + className + " " + extendsStr + " " + implementsStr + " {\n";
+        String classHeader = typeOfClass + " " + className.replace("\n", "") + " " + extendsStr + " " + implementsStr.replace("\n", "") + " {\n";
         classHeader = classHeader.replaceAll(" +", " ");
         classes.add(classHeader);
         return classHeader;
@@ -134,7 +149,7 @@ public class JavaCodeGenerator {
     
     
     
-    //4
+  //4
     public String generateMethods(
             Map<String, Map<String, String>> methods, 
             Map<String, Map<String, String>> properties, 
@@ -193,9 +208,9 @@ public class JavaCodeGenerator {
 
                 // Generate interface method stubs
                 for (Map<String, String> interfaceMethod : interfaceMethods) {
-                    String comment = "// ***requires implementation***";
+                    String comment = "// **requires implementation**";
                     String m = String.format(
-                        "\t%s %s %s() {\n\t\t%s\n\t}\n", 
+                        "\t%s %s %s {\n\t\t%s\n\t}\n", 
                         interfaceMethod.get("access"), 
                         interfaceMethod.get("return_type"), 
                         interfaceMethod.get("name"), 
@@ -208,20 +223,22 @@ public class JavaCodeGenerator {
 
             return methodsString.toString();
         }
+    
     public Map<String, String> getMapOutput () {
     	return MapOutput;
     }
     
-    //5
+  //5
     public void getInterfaceMethods(List<String> implementsList, List<Map<String, String>> interfaceMethods) {
         for (String i : implementsList) {
             // Assuming syntaxTree is a Map<String, Object>
             Map<String, Object> interfaceObj = (Map<String, Object>) syntaxTree.get(i);
-
             // Assuming "methods" is a Map<String, String> inside the interface object
-            Map<String, String> methods = (Map<String, String>) interfaceObj.get("methods");
-            interfaceMethods.add((Map<String, String>) methods.values());
-
+            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) interfaceObj.get("methods");
+            List<Map<String, String>> temp = new ArrayList<>(methods.values());
+            
+            interfaceMethods.addAll(temp);
+            
             // Recursively call for implemented interfaces
             List<String> subImplements = (List<String>) ((Map<String, Object>) interfaceObj.get("relationships")).get("implements");
             getInterfaceMethods(subImplements, interfaceMethods);
@@ -254,19 +271,48 @@ public class JavaCodeGenerator {
                 inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
             }
 
-            builder.append("    \"public ").append(classType).append(" ").append(className)
-                    .append(inheritanceBuilder).append("\": {\n");
-
+//            builder.append("    \"public ").append(classType.replace("\n", "")).append(" ").append(className.replace("\n", ""))
+//                    .append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+            
+            if (classType == "class") {
+                // Add class 
+            	builder.append("    \"public class ").append(className.replace("\n", ""))
+                    	.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+            }
+            if (classType == "abstract") {
+            	builder.append("    \"abstract class ").append(className.replace("\n", ""))
+            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+            }
+            if (classType == "interface") {
+            	builder.append("    \"interface ").append(className.replace("\n", ""))
+            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+            }
+            
             // Add attributes
             Map<String, Map<String, String>> properties = (Map<String, Map<String, String>>) _class.get("properties");
             builder.append("        \"attributes\": {\n");
             for (Map.Entry<String, Map<String, String>> propEntry : properties.entrySet()) {
                 Map<String, String> propDetails = propEntry.getValue();
                 String access = propDetails.get("access");
-                String type = propDetails.get("type");
+                String type_test = propDetails.get("type");
+                boolean found_eq = false;
+                String type = "";
+                String postfix = "";
+                for (int i = 0; i < type_test.length(); i++) {
+                	char ch = type_test.charAt(i);
+                	if (ch == '=') {
+                		found_eq = true;
+                	}
+                	
+                	if (found_eq == false) {
+                		type += ch;
+                	} else {
+                		postfix += ch;
+                	}
+                }
                 String name = propDetails.get("name");
                 builder.append("            \"").append(name).append("\": \"").append(access).append(" ").append(type)
-                        .append(" ").append(name).append("\",\n");
+                        .append(" ").append(name).append(" ").append(postfix).append("\",\n");
             }
             if (!properties.isEmpty()) {
                 builder.setLength(builder.length() - 2);
@@ -281,8 +327,8 @@ public class JavaCodeGenerator {
                 String access = methodDetails.get("access");
                 String returnType = methodDetails.get("return_type");
                 String methodName = methodDetails.get("name");
-                builder.append("            \"").append(methodName.substring(0, methodName.indexOf('('))).append("\": \"").append(access).append(" ")
-                        .append(returnType).append(" ").append(methodName).append("\",\n");
+                builder.append("            \"").append(methodName.replace("\n", "")).append("\": \"").append(access).append(" ")
+                        .append(returnType).append(" ").append(methodName.replace("\n", "")).append("\",\n");
             }
             if (!methods.isEmpty()) {
                 builder.setLength(builder.length() - 2); 
@@ -292,7 +338,7 @@ public class JavaCodeGenerator {
         builder.setLength(builder.length() - 2); 
         builder.append("\n}");
 
-//        System.out.println(builder.toString());
+        System.out.println(builder.toString());
         return "{"+builder.toString();
     }
 
@@ -320,23 +366,30 @@ public class JavaCodeGenerator {
                         .collect(Collectors.toList());
                 inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
             }
-
+            if (classType == "class") {
             // Add class 
-            formattedDescription.append("public class ").append(className)
-                    .append(inheritanceBuilder).append("\n");
-
+            	formattedDescription.append("public class ").append(className.replace("\n", ""))
+                    	.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
+            }
+            if (classType == "abstract") {
+            	formattedDescription.append("abstract class ").append(className.replace("\n", ""))
+            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
+            }
+            if (classType == "interface") {
+            	formattedDescription.append("interface ").append(className.replace("\n", ""))
+            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
+            }
             // Add methods
             Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");
             for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
                 Map<String, String> methodDetails = methodEntry.getValue();
                 String methodName = methodDetails.get("name");
-                String methodNameBeforeParen = methodName.split("\\(")[0].trim();
-                formattedDescription.append("    ").append(methodNameBeforeParen).append(":\n");
+                formattedDescription.append("   ").append(methodName).append(":\n");
             }
         }
 
         // Output the final formatted description
-//        System.out.println(formattedDescription.toString());
+        System.out.println(formattedDescription.toString());
         return formattedDescription.toString();
     }
 
