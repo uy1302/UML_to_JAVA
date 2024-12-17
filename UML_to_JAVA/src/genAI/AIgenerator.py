@@ -21,20 +21,39 @@ class AIagent():
 			
 			prompt += "}\n"
 		
-		print(prompt)	
+		#print(prompt)	
 		response = self.model.generate_content(prompt)
+		print(response.text)
 		return self.postProcessResponses(response)
 
 	def postProcessResponses(self, response):
-		return_text = response.text.replace("```","").split("\n")[1:-1]
+		return_text = response.text.split("\n")
 		return_file = []
 		i = 0
 		while i < len(return_text):
+			if return_text[i] == "```" or return_text[i]=="java" or return_text[i]=="```java":
+				i+=1
+				continue
 			if return_text[i].find("class") != -1:
 				file = [return_text[i].split()[return_text[i].split().index("class") + 1]]
 				content = return_text[i] + "\n"
 				i += 1
-				while i < len(return_text) and return_text[i].find("class") == -1:
+				while i < len(return_text) and return_text[i].find("class") == -1 and return_text[i].find("interface") == -1:
+					if return_text[i] == "```" or return_text[i]=="java" or return_text[i]=="```java" or return_text[i].find("import")!=-1:
+						i+=1
+						continue
+					content += return_text[i] + "\n"
+					i += 1
+				file.append(content)
+				return_file.append(file)
+			elif return_text[i].find("interface") != -1:
+				file = [return_text[i].split()[return_text[i].split().index("interface") + 1]]
+				content = return_text[i] + "\n"
+				i += 1
+				while i < len(return_text) and return_text[i].find("class") == -1 and return_text[i].find("interface") == -1 or return_text[i].find("import")!=-1: 
+					if return_text[i] == "```" or return_text[i]=="java" or return_text[i]=="```java":
+						i+=1
+						continue
 					content += return_text[i] + "\n"
 					i += 1
 				file.append(content)

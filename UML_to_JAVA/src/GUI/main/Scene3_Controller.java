@@ -54,22 +54,42 @@ public class Scene3_Controller {
              System.out.println("Selected Directory: " + selectedDirectory.getAbsolutePath());
              String filePath = selectedDirectory.getAbsolutePath();
              for (Map.Entry<String, String> entry : javaCode.entrySet()) {
-                 System.out.println("Key: " + entry.getKey());
-                 System.out.println("Value: " + entry.getValue().replace("\\t", "\t"));
-                 try (FileWriter writer = new FileWriter(filePath+"/"+entry.getKey())) {
+            	 System.out.println(entry.getKey());
+             }
+             System.out.println("Hello World!");
+             for (Map.Entry<String, String> entry : javaCode.entrySet()) {
+            	 System.out.println(entry.getKey());
+            	 try {
+                     // Step 1: Create a file object
+                     File myFile = new File(filePath+"/"+entry.getKey());
+
+                     // Step 2: Create a new file
+                     if (myFile.createNewFile()) {
+                         System.out.println("File created: " + myFile.getName());
+                     } else {
+                         System.out.println("File already exists.");
+                     }
+
+                     // Step 3: Write content to the file
+                     FileWriter writer = new FileWriter(filePath+"/"+entry.getKey());
                      writer.write(entry.getValue());
+                     writer.close();
+
+                     System.out.println("Successfully wrote to the file.");
                  } catch (IOException e) {
+                     System.out.println("An error occurred.");
                      e.printStackTrace();
                  }
-             }
-             try (FileWriter writer = new FileWriter(filePath)) {
-                 writer.write("This file is written to a specific directory.");
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
-         } else {
+//                 System.out.println("Key: " + entry.getKey());
+//                 System.out.println("Value: " + entry.getValue().replace("\\t", "\t"));
+//                 try (FileWriter writer = new FileWriter(filePath+"/"+entry.getKey())) {
+//                     writer.write(entry.getValue());
+//                 } catch (IOException e) {
+//                     e.printStackTrace();
+                 }
+             } else {
              System.out.println("No directory selected.");
-         }
+             }
     }
 	
 //	public Scene3_Controller(Map<String, String> javaCode) {
@@ -115,6 +135,7 @@ public class Scene3_Controller {
 	}
 	
 	public void setJavaCode(Map<String, String> javaCode) {
+		this.javaCode = javaCode;
 		for (Map.Entry<String, String> entry : javaCode.entrySet()) {
             MenuItem menuItem = new MenuItem(entry.getKey());
             menuItem.setOnAction(e -> codeField.setText(entry.getValue()));
