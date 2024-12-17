@@ -55,6 +55,7 @@ public class Scene2_Controller {
 	private Stage stage;
 	private Scene scene;
 	private String classes;
+	private static String descriptions;
 	
 	private String apiUrl = "http://127.0.0.1:8000";
 	
@@ -80,7 +81,7 @@ public class Scene2_Controller {
 		JavaCodeGenerator java_gen = new JavaCodeGenerator(syntax_tree);
 		java_gen.generateCode();
 		
-		String descriptions = java_gen.generateDescription();
+		descriptions = java_gen.generateDescription();
 		classes = java_gen.generateClassStructure();
 //		System.out.println(classes);
 //		System.out.println(descriptions);
@@ -99,7 +100,9 @@ public class Scene2_Controller {
 		try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/fxml/DescriptionWindow.fxml"));
             Parent root = loader.load();
-            
+            Description_Controller descriptionController = loader.getController();
+//            System.out.println(descriptions);
+	        descriptionController.setDescription(descriptions);
             Stage stage = new Stage();
             stage.setTitle("New Window");
             stage.setScene(new Scene(root, 800, 600));
@@ -113,20 +116,20 @@ public class Scene2_Controller {
 	@FXML
 	public void gen_code(ActionEvent event) throws Exception{
 //		String descriptionString = descriptionText.getText().trim();
-		String descriptionString = "public class Employer extends Person\r\n"
-				+ "    hireEmployee: hire a new employee, and make them work\r\n"
-				+ "    getEmployerDetails: show all information\r\n"
-				+ "    Employer: constructor\r\n"
-				+ "public class Employee extends Person\r\n"
-				+ "    work: do a specific task\r\n"
-				+ "    getEmployeeDetails: show all information\r\n"
-				+ "public class Person\r\n"
-				+ "    getDetails: show all information";
+//		String descriptionString = "public class Employer extends Person\r\n"
+//				+ "    hireEmployee: hire a new employee, and make them work\r\n"
+//				+ "    getEmployerDetails: show all information\r\n"
+//				+ "    Employer: constructor\r\n"
+//				+ "public class Employee extends Person\r\n"
+//				+ "    work: do a specific task\r\n"
+//				+ "    getEmployeeDetails: show all information\r\n"
+//				+ "public class Person\r\n"
+//				+ "    getDetails: show all information";
 //		System.out.println(descriptionString);
-		String descriptions = jsonConverter.StringtoJson(descriptionString);
-		System.out.println(descriptions);
+		String descriptionJson = jsonConverter.StringtoJson(descriptions);
+		System.out.println(descriptionJson);
 		System.out.println(classes);
-		int postResponseCode = connectAPI.postAPI(descriptions, classes);
+		int postResponseCode = connectAPI.postAPI(descriptionJson, classes);
 		if (postResponseCode == HttpURLConnection.HTTP_OK) {
 			connectAPI.runPython("test.py");
 			Map<String, String> javaCode = connectAPI.getCode();
@@ -180,7 +183,7 @@ public class Scene2_Controller {
 	
 	@FXML
 	public void logout(ActionEvent event) throws Exception{
-		Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene1.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene1.fxml"));
 		
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Logging out");
@@ -194,5 +197,9 @@ public class Scene2_Controller {
 			stage.show();
 		}
 		
+	}
+	
+	public static void getDescription(String description) {
+		descriptions = description;
 	}
 }

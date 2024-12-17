@@ -99,8 +99,8 @@ public class JavaCodeGenerator {
         catch (Exception e) {
             System.err.println("JavaCodeGenerator.generateCode ERROR: " + e.getMessage());
         }
-        System.out.println("#####");
-        System.out.println(MapOutput);
+//        System.out.println("#####");
+//        System.out.println(MapOutput);
     }
     
     
@@ -292,7 +292,7 @@ public class JavaCodeGenerator {
         builder.setLength(builder.length() - 2); 
         builder.append("\n}");
 
-        System.out.println(builder.toString());
+//        System.out.println(builder.toString());
         return "{"+builder.toString();
     }
 
@@ -336,7 +336,7 @@ public class JavaCodeGenerator {
         }
 
         // Output the final formatted description
-        System.out.println(formattedDescription.toString());
+//        System.out.println(formattedDescription.toString());
         return formattedDescription.toString();
     }
 

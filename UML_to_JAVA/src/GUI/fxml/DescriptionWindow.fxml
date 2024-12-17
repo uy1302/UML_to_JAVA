@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #28374f;" stylesheets="GUI/css/button.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.main.Description_Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #28374f;" stylesheets="GUI/css/button.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.main.Description_Controller">
    <children>
-      <TextArea layoutX="45.0" layoutY="52.0" prefHeight="504.0" prefWidth="342.0" text="Write your descriptions here&#10;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="50.0">
+      <TextArea fx:id="descriptionText" layoutX="45.0" layoutY="52.0" prefHeight="504.0" prefWidth="342.0" text="Write your descriptions here&#10;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="50.0">
          <font>
             <Font size="15.0" />
          </font></TextArea>
-      <Button fx:id="uploadDes" layoutX="573.0" layoutY="287.0" mnemonicParsing="false" onAction="#readDescriptionFile" prefHeight="70.0" prefWidth="130.0" text="Upload File" AnchorPane.bottomAnchor="250.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="250.0">
+      <Button fx:id="uploadDes" layoutX="552.0" layoutY="184.0" mnemonicParsing="false" onAction="#readDescriptionFile" prefHeight="70.0" prefWidth="130.0" text="Upload File" AnchorPane.bottomAnchor="316.0" AnchorPane.rightAnchor="118.0" AnchorPane.topAnchor="184.0">
          <font>
             <Font size="15.0" />
          </font>
@@ -22,5 +26,6 @@
             <Font size="15.0" />
          </font>
       </Label>
+      <Button fx:id="btnSave" layoutX="570.0" layoutY="313.0" mnemonicParsing="false" onAction="#saveDescription" prefHeight="43.0" prefWidth="95.0" text="Save" />
    </children>
 </AnchorPane>

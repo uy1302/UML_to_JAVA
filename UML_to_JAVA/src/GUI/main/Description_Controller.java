@@ -13,10 +13,15 @@ import javafx.stage.Stage;
 
 public class Description_Controller {
 	@FXML
-	private Button uploadDes = new Button();
+	private Button uploadDes;
 	
 	@FXML
     private TextArea descriptionText;
+	
+	@FXML
+    private Button btnSave;
+	
+	private String descriptions;
 	
 	@FXML
     public void readDescriptionFile(ActionEvent event) {
@@ -35,5 +40,19 @@ public class Description_Controller {
         } else {
             System.out.println("File selection canceled.");
         }
+    }
+	
+	public void setDescription(String descriptions) {
+		this.descriptions = descriptions;
+//		System.out.println(descriptions);
+		descriptionText.setText(descriptions);
+	}
+	
+	@FXML
+    void saveDescription(ActionEvent event) {
+		descriptions = descriptionText.getText(); 
+		Scene2_Controller.getDescription(descriptions);
+		Stage stage = (Stage) btnSave.getScene().getWindow();
+	    stage.close();
     }
 }
