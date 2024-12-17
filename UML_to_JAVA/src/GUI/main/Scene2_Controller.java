@@ -27,6 +27,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -92,26 +93,20 @@ public class Scene2_Controller {
         }
 	}
 	
+	
 	@FXML
-    public void readDescriptionFile(ActionEvent event) {
-		FileChooser fileChooser = new FileChooser();
-
-        // Set an initial directory (e.g., Desktop)
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home") + "/Desktop"));
-
-        // Set a file extension filter to show only .txt files
-        FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(txtFilter);
-        Stage stage = (Stage) browse.getScene().getWindow();
-        // Open the file chooser dialog
-        File selectedFile = fileChooser.showOpenDialog(stage);
-
-        // Check if the user selected a file
-        if (selectedFile != null) {
-            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-//            descriptionText.setText(jsonConverter.readFileAsString(selectedFile.getAbsolutePath()));
-        } else {
-            System.out.println("File selection canceled.");
+    private void openNewWindow() {
+		try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/fxml/DescriptionWindow.fxml"));
+            Parent root = loader.load();
+            
+            Stage stage = new Stage();
+            stage.setTitle("New Window");
+            stage.setScene(new Scene(root, 800, 600));
+            
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 	
