@@ -6,6 +6,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jsoup-1.18.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="D:/JFX/javafx-sdk-23.0.1/lib/javafx.base.jar">
 		<attributes>
 			<attribute name="module" value="true"/>

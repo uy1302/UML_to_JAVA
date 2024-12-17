@@ -15,6 +15,7 @@ public class Vehicle {
 		speed += increment;
 	}
 	void brake(double decrement){
-		speed = Math.max(0, speed - decrement);
+		speed -= decrement;
+		if(speed < 0) speed = 0;
 	}
 }
