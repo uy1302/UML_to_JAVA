@@ -10,7 +10,7 @@ public class JavaCodeGeneratorTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-        String drawioFilepath = "D:/OneDrive - Hanoi University of Science and Technology/Domain Basics/Object Oriented Programming/UML_to_JAVA/UML_to_JAVA/Test5.drawio";
+        String drawioFilepath = "/Users/phamkien/Downloads/AIMS (5).drawio";
         String decoded_xml = DecodeAndCompress.convert(drawioFilepath);
 		StyleParser parser_style = new StyleParser(decoded_xml);
 //		System.out.println(decoded_xml);
@@ -25,7 +25,7 @@ public class JavaCodeGeneratorTest {
 		JavaCodeGenerator java_gen = new JavaCodeGenerator(syntax_tree);
 		java_gen.generateCode();
 		java_gen.generateClassStructure();
-		java_gen.generateDescription();
+//		java_gen.generateDescription();
 	}
 }
 
