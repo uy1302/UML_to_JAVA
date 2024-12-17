@@ -245,7 +245,7 @@ public class SyntaxParser {
             Map<String, Object> methodDetails = new HashMap<>();
             methodDetails.put("access", getAccessModifier(accessModifierSymbol));
             methodDetails.put("name", tempVal[0].strip());
-            methodDetails.put("return_type", tempVal.length > 1 ? tempVal[1].strip() : "void");
+            methodDetails.put("return_type", tempVal.length > 1 ? tempVal[1].strip() : "");
 
             template.put(_id, methodDetails);
         }

@@ -89,8 +89,9 @@ public class JavaCodeGenerator {
                 List<String> check_lst = Arrays.asList((String) _class.get("name"), file);
                 this.files.add(check_lst);
 //                System.out.println(file);
+                System.out.println(file);
             }
-
+            
 //            generateFiles();
         }
         catch (Exception e) {
@@ -106,10 +107,25 @@ public class JavaCodeGenerator {
         for (Map.Entry<String, Map<String, String>> entry : properties.entrySet()) {
             Map<String, String> propertyValue = entry.getValue();
             String access = propertyValue.get("access");
-            String type = propertyValue.get("type");
+            String type_test = propertyValue.get("type");
             String name = propertyValue.get("name");
-
-            String propertyString = "\t" + access + " " + type + " " + name + ";\n";
+            
+            boolean found_eq = false;
+            String type = "";
+            String postfix = "";
+            for (int i = 0; i < type_test.length(); i++) {
+            	char ch = type_test.charAt(i);
+            	if (ch == '=') {
+            		found_eq = true;
+            	}
+            	
+            	if (found_eq == false) {
+            		type += ch;
+            	} else {
+            		postfix += ch;
+            	}
+            }
+            String propertyString = "\t" + access + " " + type + " " + name + " " + postfix + ";\n";
             this.properties.add(propertyString);
             propertiesString += propertyString;
         }
@@ -208,11 +224,12 @@ public class JavaCodeGenerator {
         for (String i : implementsList) {
             // Assuming syntaxTree is a Map<String, Object>
             Map<String, Object> interfaceObj = (Map<String, Object>) syntaxTree.get(i);
-
             // Assuming "methods" is a Map<String, String> inside the interface object
-            Map<String, String> methods = (Map<String, String>) interfaceObj.get("methods");
-            interfaceMethods.add((Map<String, String>) methods.values());
-
+            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) interfaceObj.get("methods");
+            List<Map<String, String>> temp = new ArrayList<>(methods.values());
+            
+            interfaceMethods.addAll(temp);
+            
             // Recursively call for implemented interfaces
             List<String> subImplements = (List<String>) ((Map<String, Object>) interfaceObj.get("relationships")).get("implements");
             getInterfaceMethods(subImplements, interfaceMethods);
