@@ -3,6 +3,7 @@ package GUI.main;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.Map;
 
 import API.utils.connectAPI;
@@ -11,7 +12,7 @@ import Decode.DecodeAndCompress;
 import Generator.JavaCodeGenerator;
 import Parser.StyleParser;
 import Parser.SyntaxParser;
-import exceptions.descriptionException;
+import exceptions.DescriptionException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -52,10 +54,24 @@ public class Scene2_Controller {
 	@FXML
     private MenuButton btnSelectFile;
 	
+	@FXML
+    private MenuButton historyOption;
+	
+	@FXML
+    private MenuItem menuClear;
+	
+	@FXML
+    private Button btnClear;
+	
+	
+	
 	private Stage stage;
 	private Scene scene;
 	private String classes;
 	private static String descriptions;
+	private Map<String, String> currentFile = new HashMap<>();
+	private static Map<String, String> history = new HashMap<>();
+	private Map<String, String > pureCode = new HashMap<>();
 	
 	private String apiUrl = "http://127.0.0.1:8000";
 	
@@ -68,29 +84,58 @@ public class Scene2_Controller {
         FileChooser.ExtensionFilter drawioFilter = new FileChooser.ExtensionFilter("DrawIO Files (*.drawio)", "*.drawio");
         fileChooser.getExtensionFilters().add(drawioFilter);
         File selectedFile = fileChooser.showOpenDialog(stage);
-//        System.out.println(selectedFile);
-        String drawioFilepath = selectedFile.getAbsolutePath();
-//        System.out.println(drawioFilepath);
-        String decoded_xml = DecodeAndCompress.convert(drawioFilepath);
-		StyleParser parser_style = new StyleParser(decoded_xml);
-		Map<String, Object> style_tree = parser_style.convertToStyleTree();
-		
-		SyntaxParser parser_syntax = new SyntaxParser(style_tree);
-		Map<String, Map<String, Object>> syntax_tree = parser_syntax.convertToSyntaxTree();
-
-		JavaCodeGenerator java_gen = new JavaCodeGenerator(syntax_tree);
-		java_gen.generateCode();
-		
-		descriptions = java_gen.generateDescription();
-		classes = java_gen.generateClassStructure();
-//		System.out.println(classes);
-//		System.out.println(descriptions);
-//		descriptionText.setText(descriptions);
-		Map<String, String >pureCode = java_gen.getMapOutput();
-		for (Map.Entry<String, String> entry : pureCode.entrySet()) {
-            MenuItem menuItem = new MenuItem(entry.getKey().replace("\n", "")+".java");
-            menuItem.setOnAction(e -> codeText.setText(entry.getValue()));
-            btnSelectFile.getItems().add(menuItem);
+        if (selectedFile == null) {
+        	Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Error");
+	        alert.setHeaderText("Warning!");
+	        alert.setContentText("No file selected!");
+	        if (alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage) scenePane.getScene().getWindow();
+			}
+        }else {
+        	String drawioFilepath = selectedFile.getAbsolutePath();
+        	try {
+	            String decoded_xml = DecodeAndCompress.convert(drawioFilepath);
+	    		StyleParser parser_style = new StyleParser(decoded_xml);
+	    		Map<String, Object> style_tree = parser_style.convertToStyleTree();
+	    		
+	    		SyntaxParser parser_syntax = new SyntaxParser(style_tree);
+	    		Map<String, Map<String, Object>> syntax_tree = parser_syntax.convertToSyntaxTree();
+	    		
+	    		JavaCodeGenerator java_gen = new JavaCodeGenerator(syntax_tree);
+	    		java_gen.generateCode();
+	    		
+	    		descriptions = java_gen.generateDescription();
+	    		classes = java_gen.generateClassStructure();
+//	    		System.out.println(classes);
+//	    		System.out.println(descriptions);
+	//    		descriptionText.setText(descriptions);
+	    		pureCode = java_gen.getMapOutput();
+	    		btnSelectFile.getItems().clear();
+	    		for (Map.Entry<String, String> entry : pureCode.entrySet()) {
+	                MenuItem menuItem = new MenuItem(entry.getKey().replace("\n", "")+".java");
+	                menuItem.setOnAction(e ->  {codeText.setText(entry.getValue()); 
+	                							currentFile.clear();
+	                							currentFile.put(entry.getKey(), "select");});
+	                btnSelectFile.getItems().add(menuItem);
+	            }
+        	}catch(StringIndexOutOfBoundsException e) {
+    			Alert alert = new Alert(Alert.AlertType.ERROR);
+    	        alert.setTitle("Error");
+    	        alert.setHeaderText("Warning!");
+    	        alert.setContentText("Error! Diagram has no classes!");
+    	        if (alert.showAndWait().get() == ButtonType.OK) {
+    				stage = (Stage) scenePane.getScene().getWindow();
+    			}
+    		}catch(NullPointerException e) {
+    			Alert alert = new Alert(Alert.AlertType.ERROR);
+    	        alert.setTitle("Error");
+    	        alert.setHeaderText("Warning!");
+    	        alert.setContentText("Error! Diagram is not valid!");
+    	        if (alert.showAndWait().get() == ButtonType.OK) {
+    				stage = (Stage) scenePane.getScene().getWindow();
+    			}
+    		}
         }
 	}
 	
@@ -114,7 +159,7 @@ public class Scene2_Controller {
     }
 	
 	@FXML
-	public void gen_code(ActionEvent event) throws Exception{
+	public void gen_code(ActionEvent event) throws Exception, DescriptionException{
 //		String descriptionString = descriptionText.getText().trim();
 //		String descriptionString = "public class Employer extends Person\r\n"
 //				+ "    hireEmployee: hire a new employee, and make them work\r\n"
@@ -126,40 +171,39 @@ public class Scene2_Controller {
 //				+ "public class Person\r\n"
 //				+ "    getDetails: show all information";
 //		System.out.println(descriptionString);
-		String descriptionJson = jsonConverter.StringtoJson(descriptions);
-		System.out.println(descriptionJson);
-		System.out.println(classes);
-		int postResponseCode = connectAPI.postAPI(descriptionJson, classes);
-		if (postResponseCode == HttpURLConnection.HTTP_OK) {
-			connectAPI.runPython("test.py");
-			Map<String, String> javaCode = connectAPI.getCode();
-			connectAPI.clearCode();
-//			Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene3.fxml"));
-//			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//			scene = new Scene(root);
-//			stage.setScene(scene);
-//			stage.show();
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/fxml/Scene3.fxml"));
-	        Parent root = loader.load();
-
-	        // Get the Scene3 controller and pass the javaCode
-	        Scene3_Controller scene3Controller = loader.getController();
-	        scene3Controller.setJavaCode(javaCode);
-
-	        // Switch scenes
-	        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        scene = new Scene(root);
-	        stage.setScene(scene);
-	        stage.show();
-//			new Scene3(javaCode);
-//			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//	        stage.close();
-		}else {
-	        
-	        Alert alert = new Alert(Alert.AlertType.ERROR);
+		try {
+			String descriptionJson = jsonConverter.StringtoJson(descriptions);
+			int postResponseCode = connectAPI.postAPI(descriptionJson, classes);
+//			System.out.println(descriptions);
+//			System.out.println(classes);
+			if (postResponseCode == HttpURLConnection.HTTP_OK) {
+				connectAPI.runPython("test.py");
+				Map<String, String> javaCode = connectAPI.getCode();
+				connectAPI.clearCode();
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/fxml/Scene3.fxml"));
+		        Parent root = loader.load();
+		        Scene3_Controller scene3Controller = loader.getController();
+		        scene3Controller.setJavaCode(javaCode);
+		        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		        scene = new Scene(root);
+		        stage.setScene(scene);
+		        stage.show();
+			}else {
+				throw new DescriptionException("Error! Wrong description format!");
+			}
+		} catch(NullPointerException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
 	        alert.setTitle("Error");
 	        alert.setHeaderText("Warning!");
-	        alert.setContentText("Error: Wrong description format!");
+	        alert.setContentText("Error! Empty input diagram");
+	        if (alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage) scenePane.getScene().getWindow();
+			}
+		}catch(DescriptionException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Error");
+	        alert.setHeaderText("Warning!");
+	        alert.setContentText("Error! Wrong description format!");
 	        if (alert.showAndWait().get() == ButtonType.OK) {
 				stage = (Stage) scenePane.getScene().getWindow();
 			}
@@ -185,12 +229,15 @@ public class Scene2_Controller {
 	public void logout(ActionEvent event) throws Exception{
 		Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene1.fxml"));
 		
+		descriptions = "";
+		
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Logging out");
 		alert.setHeaderText(null);
 		alert.setContentText("Do you want to log out?");
 		
 		if (alert.showAndWait().get() == ButtonType.OK) {
+			history.clear();
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 			scene = new Scene(root);
 			stage.setScene(scene);
@@ -202,4 +249,42 @@ public class Scene2_Controller {
 	public static void getDescription(String description) {
 		descriptions = description;
 	}
+	
+	public void addHistory(Map<String, String> javaCode) {
+		history.putAll(javaCode);
+		for (Map.Entry<String, String> entry : history.entrySet()) {
+            MenuItem menuItem = new MenuItem(entry.getKey());
+            menuItem.setOnAction(e -> {codeText.setText(entry.getValue()); 
+            						   currentFile.clear(); 
+            						   currentFile.put(entry.getKey(), "select");});
+            historyOption.getItems().add(menuItem);
+        }
+	}
+	
+	public static Map<String, String> getHistory(){
+		return history;
+	}
+	
+	@FXML
+    public void clearHistory(ActionEvent event) {
+		history.clear();
+		historyOption.getItems().removeIf(menuItem -> !menuItem.getText().equals("Clear All"));
+		codeText.setText("//Preview Code");;
+    }
+	
+	@FXML
+    public void clearFile(ActionEvent event) {
+		for (Map.Entry<String, String> entry : currentFile.entrySet()) {
+//			System.out.println(entry.getKey()+".java" + ", " + entry.getValue());
+			codeText.setText("//Preview Code");
+			if (entry.getValue()=="history") {
+				history.remove(entry.getKey().replace("\n", ""));
+				historyOption.getItems().removeIf(menuItem -> menuItem.getText().equals(entry.getKey().replace("\n", "")));
+			}else {
+//				btnSelectFile.getItems().removeIf(menuItem -> menuItem.getText().equals(entry.getKey().replace("\n", "")+".java"));
+//				pureCode.remove(entry.getKey().replace("\n", ""));
+			}
+		}
+		currentFile.clear();
+    }
 }

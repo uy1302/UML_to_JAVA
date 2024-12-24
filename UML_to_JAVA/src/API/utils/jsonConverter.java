@@ -16,52 +16,56 @@ public class jsonConverter {
 		return StringtoJson(descriptionString);
 	}
 	
-	public static String StringtoJson(String inputString) {
-		String[] lines = inputString.split("\n");
-		StringBuilder jsonBuilder = new StringBuilder();
-		jsonBuilder.append("{");
-
-		String currentClass = null;
-		boolean isFirstClass = true;
-
-		for (String line : lines) {
-			line = line.trim();
-
-			if (line.startsWith("public class") || line.startsWith("abstract class") || line.startsWith("interface")) {
-				if (currentClass != null) {
-					jsonBuilder.append("},");
-				}
-
-				currentClass = line;
-				if (!isFirstClass) {
-					jsonBuilder.append("\n");
-				}
-				isFirstClass = false;
-
-				jsonBuilder.append("\"").append(currentClass).append("\": {");
-			} else if (!line.isEmpty()) {
-				String[] parts = line.split(":");
-				if (parts.length == 2) {
-					String methodName = parts[0].trim();
-					String description = parts[1].trim();
-
-					jsonBuilder.append("\n    \"")
-							.append(methodName).append("\": \"")
-							.append(description).append("\",");
+	public static String StringtoJson(String inputString) throws NullPointerException{
+		if (inputString == null || inputString.length() == 0) {
+			throw new NullPointerException("Empty Input");
+		}else {
+			String[] lines = inputString.split("\n");
+			StringBuilder jsonBuilder = new StringBuilder();
+			jsonBuilder.append("{");
+	
+			String currentClass = null;
+			boolean isFirstClass = true;
+	
+			for (String line : lines) {
+				line = line.trim();
+	
+				if (line.startsWith("public class") || line.startsWith("abstract class") || line.startsWith("interface")) {
+					if (currentClass != null) {
+						jsonBuilder.append("},");
+					}
+	
+					currentClass = line;
+					if (!isFirstClass) {
+						jsonBuilder.append("\n");
+					}
+					isFirstClass = false;
+	
+					jsonBuilder.append("\"").append(currentClass).append("\": {");
+				} else if (!line.isEmpty()) {
+					String[] parts = line.split(":");
+					if (parts.length == 2) {
+						String methodName = parts[0].trim();
+						String description = parts[1].trim();
+	
+						jsonBuilder.append("\n    \"")
+								.append(methodName).append("\": \"")
+								.append(description).append("\",");
+					}
 				}
 			}
+	
+			int lastCommaIndex = jsonBuilder.lastIndexOf(",");
+			if (lastCommaIndex != -1) {
+				jsonBuilder.deleteCharAt(lastCommaIndex);
+			}
+	
+			jsonBuilder.append("\n  }\n}");
+			String jsonString = jsonBuilder.toString();
+			jsonString = jsonString.replaceAll(",(\\s*})", "$1"); 
+	    	jsonString = jsonString.replaceAll(",(\\s*])", "$1"); 
+			return jsonString;
 		}
-
-		int lastCommaIndex = jsonBuilder.lastIndexOf(",");
-		if (lastCommaIndex != -1) {
-			jsonBuilder.deleteCharAt(lastCommaIndex);
-		}
-
-		jsonBuilder.append("\n  }\n}");
-		String jsonString = jsonBuilder.toString();
-		jsonString = jsonString.replaceAll(",(\\s*})", "$1"); 
-    	jsonString = jsonString.replaceAll(",(\\s*])", "$1"); 
-		return jsonString;
 	}
 
 	public static List<String> parse(String jsonString) throws StringIndexOutOfBoundsException{

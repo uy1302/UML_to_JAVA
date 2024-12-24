@@ -74,7 +74,7 @@ public class JavaCodeGenerator {
 
                 List<Map<String, String>> interfaceMethods = new ArrayList<>();
                 getInterfaceMethods(implementsRelationships, interfaceMethods);
-                System.out.println((String) _class.get("name"));
+//                System.out.println((String) _class.get("name"));
                 file += generateClasses((String) _class.get("type"), (String) _class.get("name"), inheritance, implementation);
                 file += "\n";
                 file += generateProperties((Map<String, Map<String, String>>) _class.get("properties"));
@@ -247,150 +247,158 @@ public class JavaCodeGenerator {
     
     
     public String generateClassStructure() {
-        StringBuilder builder = new StringBuilder();
-
-        for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
-            Map<String, Object> _class = entry.getValue();
-            String className = (String) _class.get("name");
-            String classType = (String) _class.get("type");
-
-            Map<String, List<String>> relationships = (Map<String, List<String>>) _class.get("relationships");
-            List<String> extendsList = relationships.get("extends");
-            List<String> implementsList = relationships.get("implements");
-
-            StringBuilder inheritanceBuilder = new StringBuilder();
-            if (extendsList != null && !extendsList.isEmpty()) {
-                String parentClassId = extendsList.get(0); 
-                String parentClassName = (String) syntaxTree.get(parentClassId).get("name");
-                inheritanceBuilder.append(" extends ").append(parentClassName);
-            }
-            if (implementsList != null && !implementsList.isEmpty()) {
-                List<String> interfaceNames = implementsList.stream()
-                        .map(id -> (String) syntaxTree.get(id).get("name"))
-                        .collect(Collectors.toList());
-                inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
-            }
-
-//            builder.append("    \"public ").append(classType.replace("\n", "")).append(" ").append(className.replace("\n", ""))
-//                    .append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
-            
-            if (classType == "class") {
-                // Add class 
-            	builder.append("    \"public class ").append(className.replace("\n", ""))
-                    	.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
-            }
-            if (classType == "abstract") {
-            	builder.append("    \"abstract class ").append(className.replace("\n", ""))
-            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
-            }
-            if (classType == "interface") {
-            	builder.append("    \"interface ").append(className.replace("\n", ""))
-            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
-            }
-            
-            // Add attributes
-            Map<String, Map<String, String>> properties = (Map<String, Map<String, String>>) _class.get("properties");
-            builder.append("        \"attributes\": {\n");
-            for (Map.Entry<String, Map<String, String>> propEntry : properties.entrySet()) {
-                Map<String, String> propDetails = propEntry.getValue();
-                String access = propDetails.get("access");
-                String type_test = propDetails.get("type");
-                boolean found_eq = false;
-                String type = "";
-                String postfix = "";
-                for (int i = 0; i < type_test.length(); i++) {
-                	char ch = type_test.charAt(i);
-                	if (ch == '=') {
-                		found_eq = true;
-                	}
-                	
-                	if (found_eq == false) {
-                		type += ch;
-                	} else {
-                		postfix += ch;
-                	}
-                }
-                String name = propDetails.get("name");
-                builder.append("            \"").append(name).append("\": \"").append(access).append(" ").append(type)
-                        .append(" ").append(name).append(" ").append(postfix).append("\",\n");
-            }
-            if (!properties.isEmpty()) {
-                builder.setLength(builder.length() - 2);
-            }
-            builder.append("\n        },\n");
-
-            // Add methods
-            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");
-            builder.append("        \"methods\": {\n");
-            for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
-                Map<String, String> methodDetails = methodEntry.getValue();
-                String access = methodDetails.get("access");
-                String returnType = methodDetails.get("return_type");
-                String methodName = methodDetails.get("name");
-                builder.append("            \"").append(methodName.replace("\n", "")).append("\": \"").append(access).append(" ")
-                        .append(returnType).append(" ").append(methodName.replace("\n", "")).append("\",\n");
-            }
-            if (!methods.isEmpty()) {
-                builder.setLength(builder.length() - 2); 
-            }
-            builder.append("\n        }\n    },\n");
-        }
-        builder.setLength(builder.length() - 2); 
-        builder.append("\n}");
-
-        System.out.println(builder.toString());
-        return "{"+builder.toString();
+    	try {
+	        StringBuilder builder = new StringBuilder();
+	
+	        for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
+	            Map<String, Object> _class = entry.getValue();
+	            String className = (String) _class.get("name");
+	            String classType = (String) _class.get("type");
+	
+	            Map<String, List<String>> relationships = (Map<String, List<String>>) _class.get("relationships");
+	            List<String> extendsList = relationships.get("extends");
+	            List<String> implementsList = relationships.get("implements");
+	
+	            StringBuilder inheritanceBuilder = new StringBuilder();
+	            if (extendsList != null && !extendsList.isEmpty()) {
+	                String parentClassId = extendsList.get(0); 
+	                String parentClassName = (String) syntaxTree.get(parentClassId).get("name");
+	                inheritanceBuilder.append(" extends ").append(parentClassName);
+	            }
+	            if (implementsList != null && !implementsList.isEmpty()) {
+	                List<String> interfaceNames = implementsList.stream()
+	                        .map(id -> (String) syntaxTree.get(id).get("name"))
+	                        .collect(Collectors.toList());
+	                inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
+	            }
+	
+	//            builder.append("    \"public ").append(classType.replace("\n", "")).append(" ").append(className.replace("\n", ""))
+	//                    .append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+	            
+	            if (classType == "class") {
+	                // Add class 
+	            	builder.append("    \"public class ").append(className.replace("\n", ""))
+	                    	.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+	            }
+	            if (classType == "abstract") {
+	            	builder.append("    \"abstract class ").append(className.replace("\n", ""))
+	            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+	            }
+	            if (classType == "interface") {
+	            	builder.append("    \"interface ").append(className.replace("\n", ""))
+	            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\": {\n");
+	            }
+	            
+	            // Add attributes
+	            Map<String, Map<String, String>> properties = (Map<String, Map<String, String>>) _class.get("properties");
+	            builder.append("        \"attributes\": {\n");
+	            for (Map.Entry<String, Map<String, String>> propEntry : properties.entrySet()) {
+	                Map<String, String> propDetails = propEntry.getValue();
+	                String access = propDetails.get("access");
+	                String type_test = propDetails.get("type");
+	                boolean found_eq = false;
+	                String type = "";
+	                String postfix = "";
+	                for (int i = 0; i < type_test.length(); i++) {
+	                	char ch = type_test.charAt(i);
+	                	if (ch == '=') {
+	                		found_eq = true;
+	                	}
+	                	
+	                	if (found_eq == false) {
+	                		type += ch;
+	                	} else {
+	                		postfix += ch;
+	                	}
+	                }
+	                String name = propDetails.get("name");
+	                builder.append("            \"").append(name).append("\": \"").append(access).append(" ").append(type)
+	                        .append(" ").append(name).append(" ").append(postfix).append("\",\n");
+	            }
+	            if (!properties.isEmpty()) {
+	                builder.setLength(builder.length() - 2);
+	            }
+	            builder.append("\n        },\n");
+	
+	            // Add methods
+	            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");
+	            builder.append("        \"methods\": {\n");
+	            for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
+	                Map<String, String> methodDetails = methodEntry.getValue();
+	                String access = methodDetails.get("access");
+	                String returnType = methodDetails.get("return_type");
+	                String methodName = methodDetails.get("name");
+	                builder.append("            \"").append(methodName.replace("\n", "")).append("\": \"").append(access).append(" ")
+	                        .append(returnType).append(" ").append(methodName.replace("\n", "")).append("\",\n");
+	            }
+	            if (!methods.isEmpty()) {
+	                builder.setLength(builder.length() - 2); 
+	            }
+	            builder.append("\n        }\n    },\n");
+	        }
+	        builder.setLength(builder.length() - 2); 
+	        builder.append("\n}");
+	
+	//        System.out.println(builder.toString());
+	        return "{"+builder.toString();
+    	}catch(StringIndexOutOfBoundsException e) {
+    		throw e;
+    	}
     }
 
     
     public String generateDescription() {
-        StringBuilder formattedDescription = new StringBuilder();
-        for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
-            Map<String, Object> _class = entry.getValue();
-            String className = (String) _class.get("name");
-            String classType = (String) _class.get("type");
-
-            Map<String, List<String>> relationships = (Map<String, List<String>>) _class.get("relationships");
-            List<String> extendsList = relationships.get("extends");
-            List<String> implementsList = relationships.get("implements");
-
-            StringBuilder inheritanceBuilder = new StringBuilder();
-            if (extendsList != null && !extendsList.isEmpty()) {
-                String parentClassId = extendsList.get(0); 
-                String parentClassName = (String) syntaxTree.get(parentClassId).get("name");
-                inheritanceBuilder.append(" extends ").append(parentClassName);
-            }
-            if (implementsList != null && !implementsList.isEmpty()) {
-                List<String> interfaceNames = implementsList.stream()
-                        .map(id -> (String) syntaxTree.get(id).get("name"))
-                        .collect(Collectors.toList());
-                inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
-            }
-            if (classType == "class") {
-            // Add class 
-            	formattedDescription.append("public class ").append(className.replace("\n", ""))
-                    	.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
-            }
-            if (classType == "abstract") {
-            	formattedDescription.append("abstract class ").append(className.replace("\n", ""))
-            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
-            }
-            if (classType == "interface") {
-            	formattedDescription.append("interface ").append(className.replace("\n", ""))
-            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
-            }
-            // Add methods
-            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");
-            for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
-                Map<String, String> methodDetails = methodEntry.getValue();
-                String methodName = methodDetails.get("name");
-                formattedDescription.append("   ").append(methodName).append(":\n");
-            }
-        }
-
-        // Output the final formatted description
-        System.out.println(formattedDescription.toString());
-        return formattedDescription.toString();
+    	try {
+	        StringBuilder formattedDescription = new StringBuilder();
+	        for (Map.Entry<String, Map<String, Object>> entry : syntaxTree.entrySet()) {
+	            Map<String, Object> _class = entry.getValue();
+	            String className = (String) _class.get("name");
+	            String classType = (String) _class.get("type");
+	
+	            Map<String, List<String>> relationships = (Map<String, List<String>>) _class.get("relationships");
+	            List<String> extendsList = relationships.get("extends");
+	            List<String> implementsList = relationships.get("implements");
+	
+	            StringBuilder inheritanceBuilder = new StringBuilder();
+	            if (extendsList != null && !extendsList.isEmpty()) {
+	                String parentClassId = extendsList.get(0); 
+	                String parentClassName = (String) syntaxTree.get(parentClassId).get("name");
+	                inheritanceBuilder.append(" extends ").append(parentClassName);
+	            }
+	            if (implementsList != null && !implementsList.isEmpty()) {
+	                List<String> interfaceNames = implementsList.stream()
+	                        .map(id -> (String) syntaxTree.get(id).get("name"))
+	                        .collect(Collectors.toList());
+	                inheritanceBuilder.append(" implements ").append(String.join(", ", interfaceNames));
+	            }
+	            if (classType == "class") {
+	            // Add class 
+	            	formattedDescription.append("public class ").append(className.replace("\n", ""))
+	                    	.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
+	            }
+	            if (classType == "abstract") {
+	            	formattedDescription.append("abstract class ").append(className.replace("\n", ""))
+	            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
+	            }
+	            if (classType == "interface") {
+	            	formattedDescription.append("interface ").append(className.replace("\n", ""))
+	            		.append(inheritanceBuilder.toString().replace("\n", "")).append("\n");
+	            }
+	            // Add methods
+	            Map<String, Map<String, String>> methods = (Map<String, Map<String, String>>) _class.get("methods");
+	            for (Map.Entry<String, Map<String, String>> methodEntry : methods.entrySet()) {
+	                Map<String, String> methodDetails = methodEntry.getValue();
+	                String methodName = methodDetails.get("name");
+	                formattedDescription.append("   ").append(methodName).append(":\n");
+	            }
+	        }
+	
+	        // Output the final formatted description
+	//        System.out.println(formattedDescription.toString());
+	        return formattedDescription.toString();
+    	}catch(NullPointerException e) {
+    		throw e;
+    	}
     }
 
 
@@ -418,21 +426,21 @@ public class JavaCodeGenerator {
 
 
     //7
-    private List<Object> GetClasses() {
+    public List<Object> GetClasses() {
     	return classes;
     }
     
     //8
-    private List<Object> GetProperties() {
+    public List<Object> GetProperties() {
     	return properties;
     }
     
     //9
-    private List<Object> GetMethods() {
+    public List<Object> GetMethods() {
     	return methods;
     }
     //10
-    private List<List<String>> GetFiles() {
+    public List<List<String>> GetFiles() {
     	return files;
     }
     

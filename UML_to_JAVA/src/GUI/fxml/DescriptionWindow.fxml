@@ -16,7 +16,7 @@
          <font>
             <Font size="15.0" />
          </font></TextArea>
-      <Button fx:id="uploadDes" layoutX="552.0" layoutY="184.0" mnemonicParsing="false" onAction="#readDescriptionFile" prefHeight="70.0" prefWidth="130.0" text="Upload File" AnchorPane.bottomAnchor="316.0" AnchorPane.rightAnchor="118.0" AnchorPane.topAnchor="184.0">
+      <Button fx:id="uploadDes" layoutX="552.0" layoutY="184.0" mnemonicParsing="false" onAction="#readDescriptionFile" prefHeight="70.0" prefWidth="130.0" stylesheets="@../css/button.css" text="Upload File" AnchorPane.bottomAnchor="316.0" AnchorPane.rightAnchor="118.0" AnchorPane.topAnchor="184.0">
          <font>
             <Font size="15.0" />
          </font>
@@ -26,6 +26,6 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="btnSave" layoutX="570.0" layoutY="313.0" mnemonicParsing="false" onAction="#saveDescription" prefHeight="43.0" prefWidth="95.0" text="Save" />
+      <Button fx:id="btnSave" layoutX="552.0" layoutY="313.0" mnemonicParsing="false" onAction="#saveDescription" prefHeight="43.0" prefWidth="130.0" stylesheets="@../css/button.css" text="Save &amp; Close" />
    </children>
 </AnchorPane>

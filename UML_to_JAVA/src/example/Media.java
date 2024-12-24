@@ -5,6 +5,7 @@ abstract class Media {
     private float cost;
     private static int nbMedia = 0;
 
+
     public Media(String title) {
         this.title = title;
         this.id = nbMedia++;
@@ -14,7 +15,7 @@ abstract class Media {
         this.title = title;
         this.category = category;
         this.cost = cost;
-         this.id = nbMedia++;
+        this.id = nbMedia++;
     }
 
     public int getId() {
@@ -34,11 +35,7 @@ abstract class Media {
     }
 
     public boolean equals(Media other) {
-        return this.title.equals(other.title);
-    }
-    
-    public String toString(){
-        return "ID: " + id + " - Title: " + title + (category != null ? (" - Category: " + category) : "")+  (cost > 0 ? (" - Cost: " + cost) : "");
+         return this.title.equals(other.title) && this.category.equals(other.category) && this.cost == other.cost;
     }
 }
 
