@@ -25,11 +25,18 @@ public class Book extends Media {
     }
 
     public void removeAuthor(String authorName) {
-        this.authors.remove(authorName);
+       this.authors.remove(authorName);
     }
 
+    @Override
     public String toString() {
-         return "Book - " + super.toString() + " - Authors: " + String.join(", ", authors);
+        return "Book{" +
+                "id=" + getId() +
+                ", title='" + getTitle() + '\\'' +
+                ", category='" + getCategory() + '\\'' +
+                ", cost=" + getCost() +
+                ", authors=" + authors +
+                '}';
     }
 }
 

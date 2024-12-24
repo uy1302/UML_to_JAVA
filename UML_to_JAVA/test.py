@@ -28,9 +28,9 @@ res = agent.generateCodeByDescriptions(descriptions, classes)
 #print(res)
 for file in res:
     file_name = file[0] + ".java"
-    print(file_name)
+    #print(file_name)
     file_contents = file[1]
-    print(file_contents)
+    #print(file_contents)
    # write_path = "examples/example_code" + f"/{file_name}"
    # if os.path.exists(write_path):
       #  with open(write_path, "w") as f:

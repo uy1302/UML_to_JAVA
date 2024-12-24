@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import exceptions.descriptionException;
+import exceptions.DescriptionException;
 
 public class connectAPI {
 	private static String apiUrl = "http://127.0.0.1:8000";
 	
-	public static int postAPI(String descriptions, String classes) {
+	public static int postAPI(String descriptions, String classes) throws DescriptionException{
 		String jsonDescriptions = "{\"descriptions\" :" + descriptions + "," +
 								"\"classes\" :" + classes + "}";
 		// System.out.println(jsonDescriptions);
@@ -40,6 +40,9 @@ public class connectAPI {
 			}
 
 			int responseCode = connection.getResponseCode();
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				throw new DescriptionException("Error! Wrong description format");
+			}
 			return responseCode;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

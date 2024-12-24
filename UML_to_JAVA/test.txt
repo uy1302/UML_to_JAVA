@@ -1,9 +1,9 @@
 public class Employer extends Person
-    hireEmployee: hire a new employee, and make them work
-    getEmployerDetails: show all information
-    Employer: constructor
+   hireEmployee(Employee employee):hire a new employee, and make them work
+   getEmployerDetails():show all information
+   Employer(String company, String position):constructor
 public class Employee extends Person
-    work: do a specific task
-    getEmployeeDetails: show all information
+   work():do a specific task
+   getEmployeeDetails():show all information
 public class Person
-    getDetails: show all information
+   getDetails():show all information

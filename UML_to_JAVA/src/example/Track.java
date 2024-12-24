@@ -12,11 +12,11 @@ public class Track implements Playable {
     }
 
     public boolean equals(Track track) {
-        return this.title.equals(track.title);
+        return this.title.equals(track.title) && this.length == track.length;
     }
 
     public void play() {
-        System.out.println("Playing Track: " + title + ", Length: " + length);
+        System.out.println("Playing track: " + title + ", Length: " + length);
     }
 }
 

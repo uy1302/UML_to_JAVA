@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import API.utils.connectAPI;
+import exceptions.HistoryLimitExceedException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +41,14 @@ public class Scene3_Controller {
 	@FXML
     private Button btnExport;
 	
+	@FXML
+    private Button btnSaveHistory;
+	
+	@FXML
+    private MenuButton historyOption;
+	
+	boolean save = false;
+	
 	private Map<String, String> javaCode = new HashMap<>();
 	
 	@FXML
@@ -56,7 +65,7 @@ public class Scene3_Controller {
              for (Map.Entry<String, String> entry : javaCode.entrySet()) {
             	 System.out.println(entry.getKey());
              }
-             System.out.println("Hello World!");
+//             System.out.println("Hello World!");
              for (Map.Entry<String, String> entry : javaCode.entrySet()) {
             	 System.out.println(entry.getKey());
             	 try {
@@ -88,7 +97,13 @@ public class Scene3_Controller {
 //                     e.printStackTrace();
                  }
              } else {
-             System.out.println("No directory selected.");
+            	Alert alert = new Alert(Alert.AlertType.ERROR);
+     	        alert.setTitle("Error");
+     	        alert.setHeaderText("Warning!");
+     	        alert.setContentText("You have not chosen any directory!");
+     	        if (alert.showAndWait().get() == ButtonType.OK) {
+     				stage = (Stage) scenePane.getScene().getWindow();
+     			}
              }
     }
 	
@@ -97,11 +112,24 @@ public class Scene3_Controller {
 //	}
 	
 	public void new_file(ActionEvent event) throws Exception{
-		Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene2.fxml"));
-		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-		scene = new Scene(root);
-		stage.setScene(scene);
-		stage.show();
+//		Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Scene2.fxml"));
+//		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+//		scene = new Scene(root);
+//		stage.setScene(scene);
+//		stage.show();
+		
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/fxml/Scene2.fxml"));
+        Parent root = loader.load();
+
+        Scene2_Controller scene2Controller = loader.getController();
+        if (save) {
+        	scene2Controller.addHistory(javaCode);
+        }
+
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
 	}
 	
 	public void exit(ActionEvent event) throws IOException{
@@ -142,4 +170,24 @@ public class Scene3_Controller {
             fileSelector.getItems().add(menuItem);
         }
 	}
+	
+	@FXML
+    public void saveHistory() throws HistoryLimitExceedException{
+		try {
+	        if (Scene2_Controller.getHistory().size() + javaCode.size() > 20) {
+	            throw new HistoryLimitExceedException("Error! History is already full! Please clear history to continue!");
+	        }
+	        save = true;
+	    } catch (HistoryLimitExceedException e) {
+	        // Create an alert to display the exception message
+	        Alert alert = new Alert(AlertType.ERROR);
+	        alert.setTitle("History Limit Exceeded");
+	        alert.setHeaderText("History Limit Exceeded");
+	        alert.setContentText(e.getMessage());
+
+	        // Show the alert to the user
+	        alert.showAndWait();
+	    }
+    }
+	
 }

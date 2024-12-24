@@ -1,6 +1,6 @@
 public class CompactDisc extends Disc implements Playable {
     private String artist;
-    private List<Track> tracks;
+    private List<Track> track;
 
     public String getArtist() {
         return artist;
@@ -9,43 +9,59 @@ public class CompactDisc extends Disc implements Playable {
     public CompactDisc(String title, String Category, String director, int length, float cost, String artist, List<Track> tracks) {
         super(title, Category, director, cost);
         this.artist = artist;
-        this.tracks = tracks;
+        this.track = tracks;
     }
 
-    public CompactDisc(String title, String Category, String director, int length, float cost) {
-        super(title, Category, director, cost);
-        this.tracks = new ArrayList<>();
+     public CompactDisc(String title, String Category, String director, int length, float cost) {
+         super(title, Category, director, cost);
+         this.track = new ArrayList<>();
     }
 
     public CompactDisc(String title) {
         super(title);
-        this.tracks = new ArrayList<>();
+        this.track = new ArrayList<>();
     }
 
     public List<Track> getTracks() {
-        return tracks;
+        return track;
     }
 
+
+    @Override
     public void play() {
-        System.out.println("Playing CD: " + getTitle() + ", Tracks: ");
-        for (Track track : tracks) {
-            track.play();
+        System.out.println("Playing CD: " + getTitle());
+        if (track != null) {
+            for (Track t : track) {
+                t.play();
+            }
         }
     }
 
-   public String toString() {
-        return "CD - " + super.toString() + (getDirector() != null ? (" - Director: " + getDirector()) : "") + (artist != null ? (" - Artist: " + artist) : "");
+    @Override
+    public String toString() {
+        return "CompactDisc{" +
+                "id=" + getId() +
+                ", title='" + getTitle() + '\\'' +
+                ", category='" + getCategory() + '\\'' +
+                ", cost=" + getCost() +
+                 ", director='" + getDirector() + '\\'' +
+                ", artist='" + artist + '\\'' +
+                ", track=" + track +
+                '}';
     }
 
-
     public void removeTrack(Track track) {
-        tracks.removeIf(t -> t.equals(track));
+        this.track.removeIf(t -> t.equals(track));
     }
 
     public void addTrack(Track track) {
-        if(tracks.stream().noneMatch(t -> t.equals(track))){
-             tracks.add(track);
+        boolean contains = false;
+        for(Track t : this.track) {
+             if(t.equals(track)) {
+                 contains = true;
+             }
         }
+        if(!contains)
+          this.track.add(track);
     }
 }
-
