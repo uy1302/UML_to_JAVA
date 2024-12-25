@@ -11,6 +11,7 @@ module UML_to_JAVA {
 	requires org.jsoup;
 	requires java.desktop;
 	requires javafx.swing;
+	requires java.sql;
 	exports GUI.main;
 	opens GUI.main to javafx.fxml;
 }

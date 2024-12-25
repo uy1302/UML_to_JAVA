@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #28374f;" stylesheets="GUI/css/button.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.main.Description_Controller">
+   <children>
+      <TextArea fx:id="descriptionText" layoutX="47.0" layoutY="68.0" prefHeight="313.0" prefWidth="704.0" text="Write your descriptions here&#10;" AnchorPane.bottomAnchor="219.0" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="49.0" AnchorPane.topAnchor="68.0">
+         <font>
+            <Font size="15.0" />
+         </font></TextArea>
+      <Button fx:id="uploadDes" layoutX="239.0" layoutY="461.0" mnemonicParsing="false" onAction="#readDescriptionFile" prefHeight="43.0" prefWidth="130.0" stylesheets="@../css/button.css" text="Upload File" AnchorPane.bottomAnchor="96.0" AnchorPane.rightAnchor="431.0" AnchorPane.topAnchor="461.0">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnSave" layoutX="431.0" layoutY="461.0" mnemonicParsing="false" onAction="#saveDescription" prefHeight="43.0" prefWidth="130.0" stylesheets="@../css/button.css" text="Save &amp; Close" />
+   </children>
+</AnchorPane>

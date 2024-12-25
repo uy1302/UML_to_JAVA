@@ -3,12 +3,15 @@ package GUI.main;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import API.utils.connectAPI;
 import API.utils.jsonConverter;
+import Database.DBUtils;
 import Decode.DecodeAndCompress;
+import GUI.main.Scene1_Controller.SessionContext;
 import Generator.JavaCodeGenerator;
 import Parser.StyleParser;
 import Parser.SyntaxParser;
@@ -22,17 +25,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -77,6 +76,7 @@ public class Scene2_Controller {
 	
 	private String apiUrl = "http://127.0.0.1:8000";
 	
+	int userId = SessionContext.getUserId();
 	@FXML
     private void initialize() {
 		btnClear.setVisible(false);
@@ -301,14 +301,30 @@ public class Scene2_Controller {
 	@FXML
     public void clearHistory(ActionEvent event) throws EmptyHistoryException{
 		try {
-			if (history.size() > 0) {
-				history.clear();
+			if (DBUtils.getSizeHistory(userId) > 0) {
 				historyOption.getItems().removeIf(menuItem -> !menuItem.getText().equals("Clear All"));
+				DBUtils.deleteFile(userId);
+				history.clear();
+				Alert alert = new Alert(AlertType.INFORMATION);
+	            alert.setTitle("Success");
+	            alert.setHeaderText("Code Deleted Successfully");
+	            alert.setContentText("Your code has been deleted from the database !");
+	            if (alert.showAndWait().get() == ButtonType.OK) {
+	            	stage = (Stage) scenePane.getScene().getWindow();
+	 			}
 				codeText.setText("//Preview Code");
 			}else {
 				throw new EmptyHistoryException("Error! Nothing to clear!");
 			}
 		}catch(EmptyHistoryException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Error");
+	        alert.setHeaderText("Warning!");
+	        alert.setContentText(e.getMessage());
+	        if (alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage) scenePane.getScene().getWindow();
+			}  
+		}catch(SQLException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 	        alert.setTitle("Error");
 	        alert.setHeaderText("Warning!");
@@ -326,18 +342,23 @@ public class Scene2_Controller {
 		for (Map.Entry<String, String> entry : currentFile.entrySet()) {
 			System.out.println(entry.getKey()+".java" + ", " + entry.getValue());
 			codeText.setText("//Preview Code");
-			historyOption.getItems().forEach(menuItem -> {
-			    System.out.println(menuItem.getText().equals(entry.getKey().replace("\n", "")));
-			    System.out.println(menuItem.getText());
-			    System.out.println(entry.getKey().replace("\n", ""));
-			});
 			if (entry.getValue()=="history") {
 				history.remove(entry.getKey().replace("\n", ""));
 				historyOption.getItems().removeIf(menuItem -> menuItem.getText().equals(entry.getKey().replace("\n", "")));
+				
+				String filename = entry.getKey();
+				
+				try {
+					DBUtils.deleteFile(userId, filename);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				Alert alert = new Alert(AlertType.INFORMATION);
 	            alert.setTitle("Success");
-	            alert.setHeaderText("Code Exported Successfully");
-	            alert.setContentText("Your code has been written to your selected directory!");
+	            alert.setHeaderText("Code Deleted Successfully");
+	            alert.setContentText("Your code has been deleted from the database !");
 	            if (alert.showAndWait().get() == ButtonType.OK) {
 	            	stage = (Stage) scenePane.getScene().getWindow();
 	 			}

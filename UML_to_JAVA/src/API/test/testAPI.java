@@ -7,12 +7,13 @@ import java.util.Map;
 
 import API.utils.connectAPI;
 import API.utils.jsonConverter;
-import exceptions.descriptionException;
+//import exceptions.descriptionException;
+import exceptions.DescriptionException;
 
 import java.io.*;
 
 public class testAPI {
-	 public static void main(String[] args) {
+	 public static void main(String[] args) throws DescriptionException {
 			String apiUrl = "http://127.0.0.1:8000";
 			 String descriptions = "public class Book extends Media\r\n"
 			 		+ "   Book(String title): constructor\r\n"

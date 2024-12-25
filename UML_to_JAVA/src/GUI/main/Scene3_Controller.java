@@ -3,10 +3,12 @@ package GUI.main;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import API.utils.connectAPI;
+import Database.DBUtils;
+import GUI.main.Scene1_Controller.SessionContext;
 import exceptions.HistoryLimitExceedException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,12 +17,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -47,6 +49,8 @@ public class Scene3_Controller {
 	boolean save = false;
 	
 	private Map<String, String> javaCode = new HashMap<>();
+	int userId = SessionContext.getUserId();
+
 	
 	@FXML
     public void exportFiles(ActionEvent event) {
@@ -128,9 +132,11 @@ public class Scene3_Controller {
         Scene2_Controller scene2Controller = loader.getController();
         if (save) {
         	scene2Controller.addHistory(javaCode);
+        	for (Map.Entry<String, String> entry : javaCode.entrySet()) {
+        		DBUtils.saveCode(userId, entry.getValue(), entry.getKey());
+        	}
         }
         Scene2_Controller.getDescription("");
-
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -179,7 +185,7 @@ public class Scene3_Controller {
 	@FXML
     public void saveHistory() throws HistoryLimitExceedException{
 		try {
-	        if (Scene2_Controller.getHistory().size() + javaCode.size() > 20) {
+	        if (DBUtils.getSizeHistory(userId) + javaCode.size() > 20) {
 	            throw new HistoryLimitExceedException("Error! History reached limit!\nPlease clear history or Upgrade your account to continue!");
 	        }
 	        save = true;
@@ -199,7 +205,16 @@ public class Scene3_Controller {
 
 	        // Show the alert to the user
 	        alert.showAndWait();
-	    }
+	    } catch (SQLException e) {
+	        // Create an alert to display the exception message
+	        Alert alert = new Alert(AlertType.ERROR);
+	        alert.setTitle("Database Error");
+	        alert.setHeaderText("Database Overloaded");
+	        alert.setContentText(e.getMessage());
+
+	        // Show the alert to the user
+	        alert.showAndWait();
+	    } 
     }
 	
 }
