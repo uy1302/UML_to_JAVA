@@ -334,6 +334,13 @@ public class Scene2_Controller {
 			if (entry.getValue()=="history") {
 				history.remove(entry.getKey().replace("\n", ""));
 				historyOption.getItems().removeIf(menuItem -> menuItem.getText().equals(entry.getKey().replace("\n", "")));
+				Alert alert = new Alert(AlertType.INFORMATION);
+	            alert.setTitle("Success");
+	            alert.setHeaderText("Code Exported Successfully");
+	            alert.setContentText("Your code has been written to your selected directory!");
+	            if (alert.showAndWait().get() == ButtonType.OK) {
+	            	stage = (Stage) scenePane.getScene().getWindow();
+	 			}
 			}else {
 //				btnSelectFile.getItems().removeIf(menuItem -> menuItem.getText().equals(entry.getKey().replace("\n", "")+".java"));
 //				pureCode.remove(entry.getKey().replace("\n", ""));

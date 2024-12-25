@@ -93,7 +93,14 @@ public class Scene3_Controller {
 //                 } catch (IOException e) {
 //                     e.printStackTrace();
                  }
-             } else {
+             Alert alert = new Alert(AlertType.INFORMATION);
+             alert.setTitle("Success");
+             alert.setHeaderText("Code Exported Successfully");
+             alert.setContentText("Your code has been written to your selected directory!");
+             if (alert.showAndWait().get() == ButtonType.OK) {
+ 				stage = (Stage) scenePane.getScene().getWindow();
+ 			}
+        } else {
             	Alert alert = new Alert(Alert.AlertType.ERROR);
      	        alert.setTitle("Error");
      	        alert.setHeaderText("Warning!");
@@ -172,10 +179,17 @@ public class Scene3_Controller {
 	@FXML
     public void saveHistory() throws HistoryLimitExceedException{
 		try {
-	        if (Scene2_Controller.getHistory().size() + javaCode.size() > 2) {
+	        if (Scene2_Controller.getHistory().size() + javaCode.size() > 20) {
 	            throw new HistoryLimitExceedException("Error! History reached limit!\nPlease clear history or Upgrade your account to continue!");
 	        }
 	        save = true;
+	        Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText("Code Saved Successfully");
+            alert.setContentText("Your code has been saved to the database!");
+            if (alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage) scenePane.getScene().getWindow();
+			}
 	    } catch (HistoryLimitExceedException e) {
 	        // Create an alert to display the exception message
 	        Alert alert = new Alert(AlertType.ERROR);
