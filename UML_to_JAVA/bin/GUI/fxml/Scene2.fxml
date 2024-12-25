@@ -13,22 +13,22 @@
 
 <AnchorPane fx:id="scenePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #28374f;" stylesheets="GUI/css/button.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.main.Scene2_Controller">
    <children>
-      <Button fx:id="browse" layoutX="100.0" layoutY="85.0" mnemonicParsing="false" onAction="#browse_file" prefHeight="44.0" prefWidth="110.0" stylesheets="@../css/button.css" text="Browse" AnchorPane.bottomAnchor="471.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="85.0">
+      <Button fx:id="browse" layoutX="100.0" layoutY="82.0" mnemonicParsing="false" onAction="#browse_file" prefHeight="51.0" prefWidth="142.0" stylesheets="@../css/button.css" text="Browse" AnchorPane.bottomAnchor="467.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="82.0">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button fx:id="descriptionBrowse" layoutX="590.0" layoutY="85.0" mnemonicParsing="false" onAction="#openNewWindow" prefHeight="44.0" prefWidth="110.0" stylesheets="@../css/button.css" text="Descriptions" AnchorPane.bottomAnchor="471.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="85.0">
+      <Button fx:id="descriptionBrowse" layoutX="576.0" layoutY="82.0" mnemonicParsing="false" onAction="#openNewWindow" prefHeight="51.0" prefWidth="142.0" stylesheets="@../css/button.css" text="Descriptions" AnchorPane.bottomAnchor="467.0" AnchorPane.rightAnchor="82.0" AnchorPane.topAnchor="82.0">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button fx:id="btnGenCode" alignment="CENTER" layoutX="303.0" layoutY="464.0" mnemonicParsing="false" onAction="#gen_code" prefHeight="75.0" prefWidth="206.0" stylesheets="@../css/button.css" text="Generate code" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="303.0" AnchorPane.rightAnchor="291.0" AnchorPane.topAnchor="464.0">
+      <Button fx:id="btnGenCode" alignment="CENTER" layoutX="314.0" layoutY="465.0" mnemonicParsing="false" onAction="#gen_code" prefHeight="75.0" prefWidth="206.0" stylesheets="@../css/button.css" text="Generate code" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="314.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="465.0">
          <font>
             <Font size="24.0" />
          </font>
       </Button>
-      <MenuButton fx:id="historyOption" layoutX="426.0" layoutY="85.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="118.0" stylesheets="@../css/button.css" text="History" AnchorPane.bottomAnchor="471.0" AnchorPane.leftAnchor="426.0" AnchorPane.rightAnchor="256.0" AnchorPane.topAnchor="85.0">
+      <MenuButton fx:id="historyOption" layoutX="417.0" layoutY="82.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="142.0" stylesheets="@../css/button.css" text="History" AnchorPane.bottomAnchor="467.0" AnchorPane.leftAnchor="417.0" AnchorPane.rightAnchor="241.0" AnchorPane.topAnchor="82.0">
          <font>
             <Font size="15.0" />
          </font>
@@ -36,7 +36,10 @@
             <MenuItem fx:id="menuClear" mnemonicParsing="false" onAction="#clearHistory" text="Clear All" />
          </items>
       </MenuButton>
-      <TextArea fx:id="codeText" layoutX="105.0" layoutY="133.0" prefHeight="312.0" prefWidth="574.0" style="-fx-background-color: beige;" text="//Preview Code" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="140.0" />
+      <TextArea fx:id="codeText" layoutX="105.0" layoutY="133.0" prefHeight="310.0" prefWidth="618.0" style="-fx-background-color: beige;" text="//Preview Code" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="82.0" AnchorPane.topAnchor="140.0">
+         <font>
+            <Font name="Monospaced Regular" size="12.0" />
+         </font></TextArea>
       <Button fx:id="signout_button" layoutX="34.0" layoutY="562.0" mnemonicParsing="false" onAction="#logout" prefHeight="44.0" prefWidth="78.0" stylesheets="@../css/button.css" text="Log out" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
          <font>
             <Font size="15.0" />
@@ -47,7 +50,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <MenuButton fx:id="btnSelectFile" layoutX="255.0" layoutY="82.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="137.0" stylesheets="@../css/button.css" text="Select File">
+      <MenuButton fx:id="btnSelectFile" layoutX="258.0" layoutY="82.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="142.0" stylesheets="@../css/button.css" text="Select File">
          <font>
             <Font size="15.0" />
          </font>

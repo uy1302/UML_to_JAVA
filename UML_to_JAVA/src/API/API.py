@@ -10,21 +10,21 @@ classes_store = []
 code_store = []
 
 @app.post("/send_data")
-async def receive_data(request: Request):
+async def send_data(request: Request):
     data: Dict = await request.json()
     code_store.append(data)  # Save to in-memory store (for testing)
     print(f"Received data: {data}")  # Log to console
     return {"status": "success", "received_data": data}
 
 @app.post("/send_descriptions")
-async def receive_descriptions(request: Request):
+async def send_data(request: Request):
     data: Dict = await request.json()
     descriptions_store.append(data)  # Save to in-memory store (for testing)
     print(f"Received data: {data}")  # Log to console
     return {"status": "success", "received_descriptions": data}
 
 @app.post("/send_classes")
-async def receive_descriptions(request: Request):
+async def send_data(request: Request):
     data: Dict = await request.json()
     classes_store.append(data)  # Save to in-memory store (for testing)
     print(f"Received data: {data}")  # Log to console

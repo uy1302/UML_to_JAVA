@@ -44,9 +44,6 @@ public class Scene3_Controller {
 	@FXML
     private Button btnSaveHistory;
 	
-	@FXML
-    private MenuButton historyOption;
-	
 	boolean save = false;
 	
 	private Map<String, String> javaCode = new HashMap<>();
@@ -125,6 +122,7 @@ public class Scene3_Controller {
         if (save) {
         	scene2Controller.addHistory(javaCode);
         }
+        Scene2_Controller.getDescription("");
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -174,8 +172,8 @@ public class Scene3_Controller {
 	@FXML
     public void saveHistory() throws HistoryLimitExceedException{
 		try {
-	        if (Scene2_Controller.getHistory().size() + javaCode.size() > 20) {
-	            throw new HistoryLimitExceedException("Error! History is already full! Please clear history to continue!");
+	        if (Scene2_Controller.getHistory().size() + javaCode.size() > 2) {
+	            throw new HistoryLimitExceedException("Error! History reached limit!\nPlease clear history or Upgrade your account to continue!");
 	        }
 	        save = true;
 	    } catch (HistoryLimitExceedException e) {

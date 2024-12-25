@@ -1,42 +1,36 @@
-public class Book extends Media {
-    private List<String> authors;
+package example;
 
-    public Book(String title) {
-        super(title);
-        this.authors = new ArrayList<>();
+import java.util.ArrayList;
+import java.util.List;
+
+class DigitalVideoDisc extends Disc implements Playable {
+
+	public  DigitalVideoDisc(String title) {
+		super(title);
+	}
+	public  DigitalVideoDisc(String title, String category, float cost) {
+		super(title, category, cost);
+	}
+	public  DigitalVideoDisc(String title, String category, String director, float cost) {
+		super(title, category, director, cost);
+	}
+    public  DigitalVideoDisc(String title, String category, String director, int length, float cost) {
+        super(title, category, director, cost);
+        super.length=length;
+
     }
-
-    public Book(String title, String category, float cost, List<String> authors) {
-        super(title, category, cost);
-        this.authors = authors;
-    }
-
-    public List<String> getAuthors() {
-        return authors;
-    }
-
-    public Book(String title, String category, float cost) {
-        super(title, category, cost);
-        this.authors = new ArrayList<>();
-    }
-
-    public void addAuthor(String authorName) {
-        this.authors.add(authorName);
-    }
-
-    public void removeAuthor(String authorName) {
-       this.authors.remove(authorName);
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
+	public String toString() {
+		return "DigitalVideoDisc{" +
                 "id=" + getId() +
-                ", title='" + getTitle() + '\\'' +
-                ", category='" + getCategory() + '\\'' +
+                ", title='" + getTitle() + '\\' +
+                ", category='" + getCategory() + '\\' +
+                ", director='" + getDirector() + '\\' +
+                ", length='" + getLength() + '\\' +
                 ", cost=" + getCost() +
-                ", authors=" + authors +
                 '}';
-    }
+	}
+	public void play() {
+		System.out.println("Playing DVD: " + getTitle() + ", Length: " + getLength());
+	}
 }
 
