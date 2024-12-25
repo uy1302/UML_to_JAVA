@@ -29,7 +29,10 @@
             <Font size="20.0" />
          </font>
       </Button>
-      <TextArea fx:id="codeField" layoutX="350.0" layoutY="122.0" prefHeight="372.0" prefWidth="417.0" style="-fx-background-color: BEIGE;" text="//Your code will appear here&#10;" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="100.0" />
+      <TextArea fx:id="codeField" layoutX="350.0" layoutY="122.0" prefHeight="372.0" prefWidth="417.0" style="-fx-background-color: BEIGE;" text="//Preview Code" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="100.0">
+         <font>
+            <Font name="Monospaced Regular" size="12.0" />
+         </font></TextArea>
       <Button layoutX="379.0" layoutY="522.0" mnemonicParsing="false" onAction="#new_file" prefHeight="39.0" prefWidth="313.0" stylesheets="@../css/button.css" text="Choose new file to generate code" AnchorPane.bottomAnchor="39.0">
          <font>
             <Font size="20.0" />

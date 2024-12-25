@@ -13,6 +13,8 @@ import Generator.JavaCodeGenerator;
 import Parser.StyleParser;
 import Parser.SyntaxParser;
 import exceptions.DescriptionException;
+import exceptions.EmptyDiagramException;
+import exceptions.EmptyHistoryException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -76,7 +78,12 @@ public class Scene2_Controller {
 	private String apiUrl = "http://127.0.0.1:8000";
 	
 	@FXML
-	public void browse_file(ActionEvent event) throws Exception{
+    private void initialize() {
+		btnClear.setVisible(false);
+	}
+	
+	@FXML
+	public void browse_file(ActionEvent event) throws Exception, EmptyDiagramException{
 		FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open a file");
 //        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")+ "/Desktop"));
@@ -84,6 +91,9 @@ public class Scene2_Controller {
         FileChooser.ExtensionFilter drawioFilter = new FileChooser.ExtensionFilter("DrawIO Files (*.drawio)", "*.drawio");
         fileChooser.getExtensionFilters().add(drawioFilter);
         File selectedFile = fileChooser.showOpenDialog(stage);
+        descriptions = "";
+        btnSelectFile.getItems().clear();
+		codeText.setText("//Preview Code");
         if (selectedFile == null) {
         	Alert alert = new Alert(Alert.AlertType.ERROR);
 	        alert.setTitle("Error");
@@ -116,9 +126,17 @@ public class Scene2_Controller {
 	                MenuItem menuItem = new MenuItem(entry.getKey().replace("\n", "")+".java");
 	                menuItem.setOnAction(e ->  {codeText.setText(entry.getValue()); 
 	                							currentFile.clear();
-	                							currentFile.put(entry.getKey(), "select");});
+	                							currentFile.put(entry.getKey(), "select");
+	                							btnClear.setVisible(false);});
 	                btnSelectFile.getItems().add(menuItem);
 	            }
+	    		Alert alert = new Alert(AlertType.INFORMATION);
+	            alert.setTitle("Success");
+	            alert.setHeaderText("Diagram Load Successful");
+	            alert.setContentText("Your diagram has been successfully loaded to the system!");
+	            if (alert.showAndWait().get() == ButtonType.OK) {
+    				stage = (Stage) scenePane.getScene().getWindow();
+    			}
         	}catch(StringIndexOutOfBoundsException e) {
     			Alert alert = new Alert(Alert.AlertType.ERROR);
     	        alert.setTitle("Error");
@@ -173,13 +191,19 @@ public class Scene2_Controller {
 //		System.out.println(descriptionString);
 		try {
 			String descriptionJson = jsonConverter.StringtoJson(descriptions);
+			if (classes.length()==0) {
+    			throw new EmptyDiagramException("Error! Please choose a diagram");
+    		}
 			int postResponseCode = connectAPI.postAPI(descriptionJson, classes);
-//			System.out.println(descriptions);
-//			System.out.println(classes);
+			System.out.println(descriptions);
+			System.out.println(classes);
 			if (postResponseCode == HttpURLConnection.HTTP_OK) {
 				connectAPI.runPython("test.py");
 				Map<String, String> javaCode = connectAPI.getCode();
 				connectAPI.clearCode();
+				if (javaCode.size()==0) {
+					throw new DescriptionException("Error! Wrong description format!");
+				}
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUI/fxml/Scene3.fxml"));
 		        Parent root = loader.load();
 		        Scene3_Controller scene3Controller = loader.getController();
@@ -203,11 +227,19 @@ public class Scene2_Controller {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 	        alert.setTitle("Error");
 	        alert.setHeaderText("Warning!");
-	        alert.setContentText("Error! Wrong description format!");
+	        alert.setContentText(e.getMessage());
 	        if (alert.showAndWait().get() == ButtonType.OK) {
 				stage = (Stage) scenePane.getScene().getWindow();
 			}
-		}
+		}catch(EmptyDiagramException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Error");
+	        alert.setHeaderText("Warning!");
+	        alert.setContentText(e.getMessage());
+	        if (alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage) scenePane.getScene().getWindow();
+	        }
+		}	
 		
 	}
 	
@@ -256,7 +288,8 @@ public class Scene2_Controller {
             MenuItem menuItem = new MenuItem(entry.getKey());
             menuItem.setOnAction(e -> {codeText.setText(entry.getValue()); 
             						   currentFile.clear(); 
-            						   currentFile.put(entry.getKey(), "select");});
+            						   currentFile.put(entry.getKey(), "history");
+            						   btnClear.setVisible(true);});
             historyOption.getItems().add(menuItem);
         }
 	}
@@ -266,17 +299,38 @@ public class Scene2_Controller {
 	}
 	
 	@FXML
-    public void clearHistory(ActionEvent event) {
-		history.clear();
-		historyOption.getItems().removeIf(menuItem -> !menuItem.getText().equals("Clear All"));
-		codeText.setText("//Preview Code");;
+    public void clearHistory(ActionEvent event) throws EmptyHistoryException{
+		try {
+			if (history.size() > 0) {
+				history.clear();
+				historyOption.getItems().removeIf(menuItem -> !menuItem.getText().equals("Clear All"));
+				codeText.setText("//Preview Code");
+			}else {
+				throw new EmptyHistoryException("Error! Nothing to clear!");
+			}
+		}catch(EmptyHistoryException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Error");
+	        alert.setHeaderText("Warning!");
+	        alert.setContentText(e.getMessage());
+	        if (alert.showAndWait().get() == ButtonType.OK) {
+				stage = (Stage) scenePane.getScene().getWindow();
+			}
+		}finally{
+			btnClear.setVisible(false);
+		}
     }
 	
 	@FXML
     public void clearFile(ActionEvent event) {
 		for (Map.Entry<String, String> entry : currentFile.entrySet()) {
-//			System.out.println(entry.getKey()+".java" + ", " + entry.getValue());
+			System.out.println(entry.getKey()+".java" + ", " + entry.getValue());
 			codeText.setText("//Preview Code");
+			historyOption.getItems().forEach(menuItem -> {
+			    System.out.println(menuItem.getText().equals(entry.getKey().replace("\n", "")));
+			    System.out.println(menuItem.getText());
+			    System.out.println(entry.getKey().replace("\n", ""));
+			});
 			if (entry.getValue()=="history") {
 				history.remove(entry.getKey().replace("\n", ""));
 				historyOption.getItems().removeIf(menuItem -> menuItem.getText().equals(entry.getKey().replace("\n", "")));
@@ -285,6 +339,7 @@ public class Scene2_Controller {
 //				pureCode.remove(entry.getKey().replace("\n", ""));
 			}
 		}
+		btnClear.setVisible(false);
 		currentFile.clear();
     }
 }

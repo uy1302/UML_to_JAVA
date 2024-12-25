@@ -6,7 +6,7 @@ class AIagent():
 
 	def __init__(self, api_key):
 		genai.configure(api_key=api_key)
-		self.model = genai.GenerativeModel("gemini-2.0-flash-exp")
+		self._model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 	def generateCodeByDescriptions(self, descriptions, classes):
 		prompt = """You are a senior software developer. Complete the following methods of classes based on the discriptions, 
@@ -22,7 +22,7 @@ class AIagent():
 			prompt += "}\n"
 		
 		#print(prompt)	
-		response = self.model.generate_content(prompt)
+		response = self._model.generate_content(prompt)
 		print(response.text)
 		return self.postProcessResponses(response)
 
@@ -67,7 +67,7 @@ class AIagent():
 		prefix = """You are a senior software developer. Complete the following methods of classes, 
 		without changing the class name or method signatures. Only need to write the method body, without any explanations: \n"""
 		prompt = prefix + prompt
-		response = self.model.generate_content(prompt)
+		response = self._model.generate_content(prompt)
 		print(response.text)
 		return self.postProcessResponses(response)
 
